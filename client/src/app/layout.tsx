@@ -1,0 +1,30 @@
+import type { Metadata } from "next";
+import { Nunito_Sans } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+
+const nunito_sans = Nunito_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  variable: "--font-nunito-sans",
+});
+
+export const metadata: Metadata = {
+  title: "Medmatch",
+  description: "Career oriented platform for medical students",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={`${nunito_sans.variable} antialiased`}>
+        <Navbar />
+        <div className="mx-4 md:mx-8 lg:mx-16 xl:mx-24">{children}</div>
+      </body>
+    </html>
+  );
+}

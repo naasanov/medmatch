@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f7ff;
+  --foreground: #171717;
+  --font-nunito-sans: var(--font-nunito-sans), sans-serif;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-nunito-sans), Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
