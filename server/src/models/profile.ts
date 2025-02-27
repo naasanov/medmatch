@@ -1,32 +1,34 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, HydratedDocument } from "mongoose";
 
-interface IProfile extends Document {
+interface IProfile {
   text: {
-    bio: string;
-    work: string;
-    research: string;
-    volunteering: string;
+    bio?: string;
+    work?: string;
+    research?: string;
+    volunteering?: string;
   };
   files: {
-    resume: mongoose.Types.ObjectId | null;
-    recommendations: mongoose.Types.ObjectId[];
-    video: mongoose.Types.ObjectId | null;
+    resume?: Schema.Types.ObjectId;
+    recommendations: Schema.Types.ObjectId[];
+    video?: Schema.Types.ObjectId;
   };
 }
 
-const profileSchema = new Schema<IProfile>({
+type IProfileDocument = HydratedDocument<IProfile>;
+const profileSchema = new Schema<IProfileDocument>({
   text: {
-    bio: { type: String, default: null },
-    work: { type: String, default: null },
-    research: { type: String, default: null },
-    volunteering: { type: String, default: null },
+    bio: { type: String },
+    work: { type: String },
+    research: { type: String },
+    volunteering: { type: String },
   },
   files: {
-    resume: { type: Schema.Types.ObjectId, default: null },
+    resume: { type: Schema.Types.ObjectId },
     recommendations: { type: [Schema.Types.ObjectId], default: [] },
-    video: { type: Schema.Types.ObjectId, default: null },
+    video: { type: Schema.Types.ObjectId },
   },
 });
 
-const Profiles = mongoose.model("Profiles", profileSchema, "profiles");
-export default Profiles;
+const Profile = mongoose.model<IProfileDocument>("Profile", profileSchema, "profiles");
+
+export { Profile, IProfile, IProfileDocument };

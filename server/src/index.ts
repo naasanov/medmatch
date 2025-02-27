@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
+import profileRouter from "@/profiles/profileRoute";
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -16,7 +18,8 @@ app.get('/', (req, res) => {
   res.status(200).send("Connected");
 })
 
-// start server
+app.use('/profiles', profileRouter);
+
 const port = process.env.DEV_PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
