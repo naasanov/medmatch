@@ -1,27 +1,26 @@
-enum GeneralCode {
-  NotFound = 'NOT_FOUND',
-  Unauthorized = 'UNAUTHORIZED',
-  Forbidden = 'FORBIDDEN',
-  BadRequest = 'BAD_REQUEST',
-  InternalServerError = 'INTERNAL_SERVER_ERROR',
-  Conflict = 'CONFLICT',
+import { GeneralCode, ErrorCode } from '@/types/errorCodes';
+
+class CustomError extends Error {
+  errorCode: ErrorCode;
+  statusCode: number;
+
+  constructor(message: string, errorCode: ErrorCode, statusCode: number) {
+    super(message);
+    this.errorCode = errorCode;
+    this.statusCode = statusCode;
+  }
 }
 
-enum UserCode {
-  UserNotFound = 'USER_NOT_FOUND',
-  UserAlreadyExists = 'USER_ALREADY_EXISTS',
-  InvalidCredentials = 'INVALID_CREDENTIALS',
+class NotFoundError extends CustomError {
+  constructor(message: string, errorCode: ErrorCode = GeneralCode.NotFound, statusCode: number = 404, ) {
+    super(message, errorCode, statusCode);
+  }
 }
 
-enum ProfileCode {
-  ProfileNotFound = 'PROFILE_NOT_FOUND',
+class ConflictError extends CustomError {
+  constructor(message: string, errorCode: ErrorCode = GeneralCode.Conflict, statusCode: number = 409, ) {
+    super(message, errorCode, statusCode);
+  }
 }
 
-type ErrorCode = GeneralCode | UserCode | ProfileCode;
-
-interface ApiError {
-  details: string;
-  code: ErrorCode;
-}
-
-export { ApiError, ErrorCode, GeneralCode, UserCode, ProfileCode };
+export { CustomError, NotFoundError, ConflictError };

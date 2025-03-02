@@ -1,5 +1,10 @@
 import { ValidationError } from "express-validator";
-import { ApiError } from "@/types/errors";
+import { ErrorCode } from "@/types/errorCodes";
+
+interface ApiError {
+  details: string;
+  code: ErrorCode;
+}
 
 interface ResponseBody {
   status: "success" | "error";
@@ -16,4 +21,4 @@ interface ErrorResponseBody extends ResponseBody {
   errors: (ApiError | ValidationError)[];
 }
 
-export { SuccessResponseBody, ErrorResponseBody, ResponseBody };
+export { ApiError, SuccessResponseBody, ErrorResponseBody, ResponseBody };

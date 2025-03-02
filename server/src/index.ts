@@ -5,7 +5,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import profileRouter from "@/profiles/profileRoute";
+import errorHandler from '@/utils/errorHandler';
 
+// Express configuration
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -17,6 +19,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Database connection
 mongoose.connect(process.env.DB_URI!);
 const db = mongoose.connection;
 
@@ -32,7 +35,11 @@ app.get('/', (req, res) => {
   res.status(200).send("Connected");
 })
 
+// Routes
 app.use('/profiles', profileRouter);
+
+// Error handler must come last
+app.use(errorHandler)
 
 const port = process.env.DEV_PORT || 4000;
 app.listen(port, () => {

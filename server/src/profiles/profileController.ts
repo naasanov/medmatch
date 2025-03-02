@@ -1,7 +1,7 @@
 import ProfileService from "@/profiles/profileService";
 import { Request, Response } from "express";
-import asyncHandler from "@/utils/asyncHandler";
-import { ProfileCode } from "@/types/errors";
+import asyncHandler from "express-async-handler";
+import { ProfileCode } from "@/types/errorCodes";
 
 class ProfileController {
   private profileService: ProfileService;
@@ -19,7 +19,7 @@ class ProfileController {
     });
   });
 
-  getProfileById = asyncHandler(async (req: Request, res: Response) => {
+  getProfileById = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const { id } = req.params;
     const profile = await this.profileService.getProfileById(id);
     if (!profile) {
@@ -37,7 +37,7 @@ class ProfileController {
     });
   });
 
-  createProfile = asyncHandler(async (req: Request, res: Response) => {
+  createProfile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const profileData = req.body;
     const profile = await this.profileService.createProfile(profileData);
     res.status(201).json({
@@ -47,7 +47,7 @@ class ProfileController {
     });
   });
 
-  updateProfile = asyncHandler(async (req: Request, res: Response) => {
+  updateProfile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const { id } = req.params;
     const profileData = req.body;
     const profile = await this.profileService.updateProfile(id, profileData);
@@ -66,7 +66,7 @@ class ProfileController {
     });
   });
 
-  addFile = asyncHandler(async (req: Request, res: Response) => {
+  addFile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const { profileId, fileId } = req.params;
     const profile = await this.profileService.addFile(profileId, fileId);
     if (!profile) {
@@ -84,7 +84,7 @@ class ProfileController {
     });
   });
 
-  removeFile = asyncHandler(async (req: Request, res: Response) => {
+  removeFile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const { profileId, fileId } = req.params;
     const profile = await this.profileService.removeFile(profileId, fileId);
     if (!profile) {
