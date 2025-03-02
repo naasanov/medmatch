@@ -25,21 +25,21 @@ class ProfileService {
     });
   }
 
-  async addRecommendation(
+  async addFile(
     profileId: string,
-    recommendationId: string
+    fileId: string
   ): Promise<IProfile | null> {
     return Profile.findByIdAndUpdate(
       profileId,
-      { $addToSet: { "files.recommendations": recommendationId } },
-      { new: true, rundvalidators: true }
+      { $addToSet: { "files": fileId } },
+      { new: true, rundvalidators: true },
     );
   }
 
-  async removeRecommendation(profileId: string, recommendationId: string) {
+  async removeFile(profileId: string, fileId: string) {
     return Profile.findByIdAndUpdate(
       profileId,
-      { $pull: { "files.recommendations": recommendationId } },
+      { $pull: { "files": fileId } },
       { new: true, runValidators: true }
     );
   }

@@ -8,7 +8,7 @@ router.get("/", profileController.getAllProfiles);
 router.get("/:id", profileController.getProfileById);
 router.post("/", profileController.createProfile);
 router.put("/:id", profileController.updateProfile);
-router.post("/:id/recommendations/:recommendationId", profileController.addRecommendation);
-router.delete("/:id/recommendations/:recommendationId", profileController.removeRecommendation);
+router.post("/:profileId/files/:fileId", profileController.addFile);
+router.delete("/:profileId/files/:fileId", profileController.removeFile);
 
 export default router;

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, HydratedDocument } from "mongoose";
+import mongoose, { Schema, HydratedDocument } from "mongoose";
 
 interface IUser {
   first: string;
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUserDocument>({
   last: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  profile: { type: Schema.Types.ObjectId, ref: "Profiles", required: true },
+  profile: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
   isEmployer: { type: Boolean, required: true },
   entryDate: { type: Date, required: true, default: () => Date.now() },
 });

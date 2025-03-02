@@ -66,12 +66,9 @@ class ProfileController {
     });
   });
 
-  addRecommendation = asyncHandler(async (req: Request, res: Response) => {
-    const { profileId, recommendationId } = req.params;
-    const profile = await this.profileService.addRecommendation(
-      profileId,
-      recommendationId
-    );
+  addFile = asyncHandler(async (req: Request, res: Response) => {
+    const { profileId, fileId } = req.params;
+    const profile = await this.profileService.addFile(profileId, fileId);
     if (!profile) {
       return res.status(404).json({
         status: "error",
@@ -83,16 +80,13 @@ class ProfileController {
     res.status(200).json({
       status: "success",
       data: profile,
-      message: "Recommendation added successfully",
+      message: "File added successfully",
     });
   });
 
-  removeRecommendation = asyncHandler(async (req: Request, res: Response) => {
-    const { profileId, recommendationId } = req.params;
-    const profile = await this.profileService.removeRecommendation(
-      profileId,
-      recommendationId
-    );
+  removeFile = asyncHandler(async (req: Request, res: Response) => {
+    const { profileId, fileId } = req.params;
+    const profile = await this.profileService.removeFile(profileId, fileId);
     if (!profile) {
       return res.status(404).json({
         status: "error",
@@ -104,7 +98,7 @@ class ProfileController {
     res.status(200).json({
       status: "success",
       data: profile,
-      message: "Recommendation removed successfully",
+      message: "File removed successfully",
     });
   });
 }
