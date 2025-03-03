@@ -1,11 +1,5 @@
 import mongoose, { Schema, HydratedDocument } from "mongoose";
 
-interface IFile {
-  name: string;
-  type: string;
-  id: Schema.Types.ObjectId;
-}
-
 interface IProfile {
   bio?: string;
   work?: string;

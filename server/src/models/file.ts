@@ -1,18 +1,20 @@
 import mongoose, { Schema, HydratedDocument } from "mongoose";
 
 interface IFile {
+  _id?: string;
   name: string;
   type: string;
-  id: Buffer;
+  data: Buffer;
 }
 
-type IFileDocument = HydratedDocument<IFile>;
-const profileSchema = new Schema<IFileDocument>({
-  name: { type: String },
-  type: { type: String },
-  id: { type: Buffer },
+type FileDocument = HydratedDocument<IFile>;
+
+const fileSchema = new Schema<IFile>({
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  data: { type: Buffer, required: true },
 });
 
-const File = mongoose.model<IFileDocument>("File", profileSchema, "files");
+const File = mongoose.model<IFile>("File", fileSchema, "files");
 
-export { File, IFile, IFileDocument };
+export { File, IFile, FileDocument };

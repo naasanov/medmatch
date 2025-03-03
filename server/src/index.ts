@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import profileRouter from "@/profiles/profileRoute";
+import fileRouter from "@/files/fileRouter";
+import profileRouter from "@/profiles/profileRouter";
 import errorHandler from '@/utils/errorHandler';
 
 // Express configuration
@@ -31,11 +32,12 @@ db.on("error", (e) => {
   console.log("[database]: Connection error:", e);
 });
 
+// Routes
 app.get('/', (req, res) => {
   res.status(200).send("Connected");
 })
 
-// Routes
+app.use('/files', fileRouter);
 app.use('/profiles', profileRouter);
 
 // Error handler must come last

@@ -1,25 +1,20 @@
 import { IFile } from "@/models/file";
-import { NotFoundError } from "@/types/errors";
 import { Model } from "mongoose";
-import { FileCode } from "@/types/errorCodes";
+import { FileNotFoundError } from "@/files/fileErrors";
 
 class FileService {
-  private files: Model<IFile>;
-
-  constructor(fileModel: Model<IFile>) {
-    this.files = fileModel;
-  }
+  constructor(private files: Model<IFile>) {}
 
   async getAllFiles(): Promise<IFile[]> {
     return this.files.find<IFile>().exec();
   }
 
-  async getFileById(id: string): Promise<IFile | null> {
-    const file = this.files.findById<IFile>(id).exec();
+  async getFileById(id: string): Promise<IFile> {
+    const file = await this.files.findById<IFile>(id).exec();
     if (!file) {
-      throw new NotFoundError("File not found", FileCode.FileNotFound);
+      throw new FileNotFoundError(`File with id ${id} not found`);
     }
-    return file
+    return file;
   }
 
   async createFile(fileData: IFile): Promise<IFile> {
@@ -27,8 +22,12 @@ class FileService {
     return file.save();
   }
 
-  async deleteFile(id: string) {
-    return this.files.findByIdAndDelete<IFile>(id);
+  async deleteFile(id: string): Promise<IFile> {
+    const file = await this.files.findByIdAndDelete<IFile>(id).exec();
+    if (!file) {
+      throw new FileNotFoundError(`File with id ${id} not found`);
+    }
+    return file;
   }
 }
 
