@@ -1,16 +1,14 @@
 import ProfileService from "@/profiles/profileService";
-import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { ProfileCode } from "@/types/errorCodes";
+import FileService from "@/files/fileService";
 
 class ProfileController {
-  private profileService: ProfileService;
+  constructor(
+    private profileService: ProfileService,
+    private fileService: FileService
+  ) {}
 
-  constructor() {
-    this.profileService = new ProfileService();
-  }
-
-  getAllProfiles = asyncHandler(async (req: Request, res: Response) => {
+  getAllProfiles = asyncHandler(async (req, res): Promise<any> => {
     const profiles = await this.profileService.getAllProfiles();
     res.status(200).json({
       status: "success",
@@ -19,17 +17,9 @@ class ProfileController {
     });
   });
 
-  getProfileById = asyncHandler(async (req: Request, res: Response): Promise<any> => {
+  getProfileById = asyncHandler(async (req, res): Promise<any> => {
     const { id } = req.params;
     const profile = await this.profileService.getProfileById(id);
-    if (!profile) {
-      return res.status(404).json({
-        status: "error",
-        errors: [
-          { details: "Profile not found", code: ProfileCode.ProfileNotFound },
-        ],
-      });
-    }
     res.status(200).json({
       status: "success",
       data: profile,
@@ -37,28 +27,20 @@ class ProfileController {
     });
   });
 
-  createProfile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
+  createProfile = asyncHandler(async (req, res): Promise<any> => {
     const profileData = req.body;
     const profile = await this.profileService.createProfile(profileData);
     res.status(201).json({
       status: "success",
       data: profile,
-      message: "Profile created successfully",
+      message: `Profile with id ${profile._id} created successfully`,
     });
   });
 
-  updateProfile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
+  updateProfile = asyncHandler(async (req, res): Promise<any> => {
     const { id } = req.params;
     const profileData = req.body;
     const profile = await this.profileService.updateProfile(id, profileData);
-    if (!profile) {
-      return res.status(404).json({
-        status: "error",
-        errors: [
-          { details: "Profile not found", code: ProfileCode.ProfileNotFound },
-        ],
-      });
-    }
     res.status(200).json({
       status: "success",
       data: profile,
@@ -66,17 +48,15 @@ class ProfileController {
     });
   });
 
-  addFile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
-    const { profileId, fileId } = req.params;
-    const profile = await this.profileService.addFile(profileId, fileId);
-    if (!profile) {
-      return res.status(404).json({
-        status: "error",
-        errors: [
-          { details: "Profile not found", code: ProfileCode.ProfileNotFound },
-        ],
-      });
-    }
+  addFile = asyncHandler(async (req, res): Promise<any> => {
+    const { id } = req.params;
+    const reqFile = req.file!;
+    const file = await this.fileService.createFile({
+      name: reqFile.originalname,
+      type: reqFile.mimetype,
+      data: reqFile.buffer,
+    });
+    const profile = await this.profileService.addFile(id, file._id!);
     res.status(200).json({
       status: "success",
       data: profile,
@@ -84,17 +64,9 @@ class ProfileController {
     });
   });
 
-  removeFile = asyncHandler(async (req: Request, res: Response): Promise<any> => {
+  removeFile = asyncHandler(async (req, res): Promise<any> => {
     const { profileId, fileId } = req.params;
     const profile = await this.profileService.removeFile(profileId, fileId);
-    if (!profile) {
-      return res.status(404).json({
-        status: "error",
-        errors: [
-          { details: "Profile not found", code: ProfileCode.ProfileNotFound },
-        ],
-      });
-    }
     res.status(200).json({
       status: "success",
       data: profile,

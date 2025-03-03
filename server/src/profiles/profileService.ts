@@ -1,13 +1,24 @@
 import { IProfile, Profile } from "@/models/profile";
 import { UpdateQuery } from "mongoose";
+import { ProfileNotFoundError } from "@/profiles/profileErrors";
+import { Model } from "mongoose";
 
 class ProfileService {
+  constructor(private profiles: Model<IProfile>) {}
+
   async getAllProfiles(): Promise<IProfile[]> {
-    return Profile.find();
+    return this.profiles.find<IProfile>().populate("files").exec();
   }
 
-  async getProfileById(id: string): Promise<IProfile | null> {
-    return Profile.findById(id);
+  async getProfileById(id: string): Promise<IProfile> {
+    const profile = await this.profiles
+      .findById<IProfile>(id)
+      .populate("files")
+      .exec();
+    if (!profile) {
+      throw new ProfileNotFoundError(`Profile with id ${id} not found`);
+    }
+    return profile;
   }
 
   async createProfile(profileData: IProfile): Promise<IProfile> {
@@ -18,30 +29,38 @@ class ProfileService {
   async updateProfile(
     id: string,
     profileData: UpdateQuery<IProfile>
-  ): Promise<IProfile | null> {
-    return Profile.findByIdAndUpdate(id, profileData, {
-      new: true,
-      runValidators: true,
-    });
+  ): Promise<IProfile> {
+    const profile = await this.profiles
+      .findByIdAndUpdate<IProfile>(id, profileData, { new: true })
+      .exec();
+    if (!profile) {
+      throw new ProfileNotFoundError(`Profile with id ${id} not found`);
+    }
+    return profile;
   }
 
-  async addFile(
-    profileId: string,
-    fileId: string
-  ): Promise<IProfile | null> {
-    return Profile.findByIdAndUpdate(
+  async addFile(profileId: string, fileId: string): Promise<IProfile> {
+    const profile = await this.profiles.findByIdAndUpdate<IProfile>(
       profileId,
-      { $addToSet: { "files": fileId } },
-      { new: true, rundvalidators: true },
+      { $addToSet: { files: fileId } },
+      { new: true }
     );
+    if (!profile) {
+      throw new ProfileNotFoundError(`Profile with id ${profileId} not found`);
+    }
+    return profile;
   }
 
   async removeFile(profileId: string, fileId: string) {
-    return Profile.findByIdAndUpdate(
+    const profile = this.profiles.findByIdAndUpdate<IProfile>(
       profileId,
-      { $pull: { "files": fileId } },
-      { new: true, runValidators: true }
+      { $pull: { files: fileId } },
+      { new: true }
     );
+    if (!profile) {
+      throw new ProfileNotFoundError(`Profile with id ${profileId} not found`);
+    }
+    return profile;
   }
 }
 
