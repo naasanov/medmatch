@@ -21,7 +21,7 @@ class ProfileService {
     return profile;
   }
 
-  async createProfile(profileData: IProfile): Promise<IProfile> {
+  async createProfile(profileData: Partial<IProfile> = {}): Promise<IProfile> {
     const profile = new Profile(profileData);
     return profile.save();
   }

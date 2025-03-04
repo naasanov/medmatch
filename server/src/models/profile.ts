@@ -1,7 +1,7 @@
-import mongoose, { Schema, HydratedDocument, Model } from "mongoose";
+import mongoose, { Schema, HydratedDocument } from "mongoose";
 
 interface IProfile {
-  _id?: string;
+  _id: string;
   bio?: string;
   work?: string;
   research?: string;

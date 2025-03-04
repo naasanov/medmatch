@@ -1,4 +1,4 @@
-import { GeneralCode, ErrorCode } from '@/types/errorCodes';
+import { GeneralCode, ErrorCode } from "@/types/errorCodes";
 
 class CustomError extends Error {
   errorCode: ErrorCode;
@@ -12,13 +12,21 @@ class CustomError extends Error {
 }
 
 class NotFoundError extends CustomError {
-  constructor(message: string, errorCode: ErrorCode = GeneralCode.NotFound, statusCode: number = 404, ) {
+  constructor(
+    message: string,
+    errorCode: ErrorCode = GeneralCode.NotFound,
+    statusCode: number = 404
+  ) {
     super(message, errorCode, statusCode);
   }
 }
 
 class ConflictError extends CustomError {
-  constructor(message: string, errorCode: ErrorCode = GeneralCode.Conflict, statusCode: number = 409, ) {
+  constructor(
+    message: string,
+    errorCode: ErrorCode = GeneralCode.Conflict,
+    statusCode: number = 409
+  ) {
     super(message, errorCode, statusCode);
   }
 }

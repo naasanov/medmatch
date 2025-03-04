@@ -1,17 +1,19 @@
 import mongoose, { Schema, HydratedDocument } from "mongoose";
 
 interface IUser {
+  _id?: string;
   first: string;
   last: string;
   email: string;
   password: string;
-  profile: Schema.Types.ObjectId;
+  profile: Schema.Types.ObjectId | string;
   isEmployer: boolean;
   entryDate: Date;
 }
 
 type IUserDocument = HydratedDocument<IUser>;
-const userSchema = new Schema<IUserDocument>({
+
+const userSchema = new Schema<IUser>({
   first: { type: String, required: true },
   last: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -21,5 +23,5 @@ const userSchema = new Schema<IUserDocument>({
   entryDate: { type: Date, required: true, default: () => Date.now() },
 });
 
-const User = mongoose.model<IUserDocument>("User", userSchema, "users");
-export { User, IUser };
+const User = mongoose.model<IUser>("User", userSchema, "users");
+export { User, IUser, IUserDocument };

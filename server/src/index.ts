@@ -6,6 +6,7 @@ dotenv.config();
 
 import fileRouter from "@/files/fileRouter";
 import profileRouter from "@/profiles/profileRouter";
+import userRouter from "@/users/userRouter";
 import errorHandler from '@/utils/errorHandler';
 
 // Express configuration
@@ -37,8 +38,9 @@ app.get('/', (req, res) => {
   res.status(200).send("Connected");
 })
 
-app.use('/files', fileRouter);
-app.use('/profiles', profileRouter);
+app.use('/api/files', fileRouter);
+app.use('/api/profiles', profileRouter);
+app.use('/api/users', userRouter);
 
 // Error handler must come last
 app.use(errorHandler)

@@ -16,7 +16,7 @@ router.get("/", profileController.getAllProfiles);
 router.get("/:id", profileController.getProfileById);
 router.post("/", profileController.createProfile);
 router.put("/:id", profileController.updateProfile);
-router.post("/:profileId/files", upload.single('file'), profileController.addFile);
+router.post("/:id/files", upload.single('file'), profileController.addFile);
 router.delete("/:profileId/files/:fileId", profileController.removeFile);
 
 export default router;

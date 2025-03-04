@@ -1,3 +1,7 @@
+enum MongooseCode {
+  DuplicateKey = 11000,
+}
+
 enum GeneralCode {
   NotFound = 'NOT_FOUND',
   Unauthorized = 'UNAUTHORIZED',
@@ -9,7 +13,7 @@ enum GeneralCode {
 
 enum UserCode {
   UserNotFound = 'USER_NOT_FOUND',
-  UserAlreadyExists = 'USER_ALREADY_EXISTS',
+  UserConflict = 'USER_CONFLICT',
   InvalidCredentials = 'INVALID_CREDENTIALS',
 }
 
@@ -23,4 +27,4 @@ enum FileCode {
 
 type ErrorCode = GeneralCode | UserCode | ProfileCode | FileCode;
 
-export { ErrorCode, GeneralCode, UserCode, ProfileCode, FileCode };
+export { MongooseCode, ErrorCode, GeneralCode, UserCode, ProfileCode, FileCode };
