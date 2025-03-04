@@ -2,6 +2,7 @@ import { IProfile, Profile } from "@/models/profile";
 import { UpdateQuery } from "mongoose";
 import { ProfileNotFoundError } from "@/profiles/profileErrors";
 import { Model } from "mongoose";
+import { FileNotFoundError } from "@/files/fileErrors";
 
 class ProfileService {
   constructor(private profiles: Model<IProfile>) {}
@@ -52,13 +53,17 @@ class ProfileService {
   }
 
   async removeFile(profileId: string, fileId: string) {
-    const profile = this.profiles.findByIdAndUpdate<IProfile>(
-      profileId,
-      { $pull: { files: fileId } },
-      { new: true }
+    // updateOne is used here to determine if the file was found in the profile
+    const profile = await this.profiles.updateOne(
+      { _id: profileId, files: fileId },
+      { $pull: { files: fileId } }
     );
     if (!profile) {
       throw new ProfileNotFoundError(`Profile with id ${profileId} not found`);
+    } else if (profile.modifiedCount === 0) {
+      throw new FileNotFoundError(
+        `File with id ${fileId} not found in profile with id ${profileId}`
+      );
     }
     return profile;
   }
