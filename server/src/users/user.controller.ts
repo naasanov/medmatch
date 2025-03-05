@@ -1,6 +1,6 @@
 import { IUser } from "@/models/user";
-import ProfileService from "@/profiles/profileService";
-import UserService from "@/users/userService";
+import ProfileService from "@/profiles/profile.service";
+import UserService from "@/users/user.service";
 import asyncHandler from "express-async-handler";
 
 class UserController {

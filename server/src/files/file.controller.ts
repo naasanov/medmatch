@@ -1,4 +1,4 @@
-import FileService from "@/files/fileService";
+import FileService from "@/files/file.service";
 import { IFile } from "@/models/file";
 import asyncHandler from "express-async-handler";
 
@@ -23,7 +23,7 @@ class FileController {
       data: file,
     });
   });
-  
+
   createFile = asyncHandler(async (req, res): Promise<any> => {
     const { originalname, mimetype, buffer } = req.file!;
     const fileData: IFile = {

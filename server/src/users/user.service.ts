@@ -1,6 +1,6 @@
 import { IUser } from "@/models/user";
 import { Model, UpdateQuery } from "mongoose";
-import { UserNotFoundError, UserConflictError } from "./userErrors";
+import { UserNotFoundError, UserConflictError } from "./user.errors";
 import { MongoError } from "mongodb";
 
 class UserService {

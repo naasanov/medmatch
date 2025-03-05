@@ -1,8 +1,8 @@
-import { IProfile, Profile } from "@/models/profile";
+import { IProfile } from "@/models/profile";
 import { UpdateQuery } from "mongoose";
-import { ProfileNotFoundError } from "@/profiles/profileErrors";
+import { ProfileNotFoundError } from "@/profiles/profile.errors";
 import { Model } from "mongoose";
-import { FileNotFoundError } from "@/files/fileErrors";
+import { FileNotFoundError } from "@/files/file.errors";
 
 class ProfileService {
   constructor(private profiles: Model<IProfile>) {}
@@ -23,7 +23,7 @@ class ProfileService {
   }
 
   async createProfile(profileData: Partial<IProfile> = {}): Promise<IProfile> {
-    const profile = new Profile(profileData);
+    const profile = new this.profiles(profileData);
     return profile.save();
   }
 

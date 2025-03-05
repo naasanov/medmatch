@@ -1,9 +1,17 @@
-import { ValidationError } from "express-validator";
 import { ErrorCode } from "@/types/errorCodes";
+import { Location } from "express-validator";
 
 interface ApiError {
+  type: "data";
   details: string;
   code: ErrorCode;
+}
+
+interface ValidationError {
+  type: "validation";
+  loc: Location | "other";
+  field: string;
+  details: string;
 }
 
 interface ResponseBody {
@@ -21,4 +29,10 @@ interface ErrorResponseBody extends ResponseBody {
   errors: (ApiError | ValidationError)[];
 }
 
-export { ApiError, SuccessResponseBody, ErrorResponseBody, ResponseBody };
+export {
+  ApiError,
+  ValidationError,
+  SuccessResponseBody,
+  ErrorResponseBody,
+  ResponseBody,
+};

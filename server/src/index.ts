@@ -4,9 +4,9 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import fileRouter from "@/files/fileRouter";
-import profileRouter from "@/profiles/profileRouter";
-import userRouter from "@/users/userRouter";
+import fileRouter from "@/files/file.router";
+import profileRouter from "@/profiles/profile.router";
+import userRouter from "@/users/user.router";
 import errorHandler from '@/utils/errorHandler';
 
 // Express configuration

@@ -1,4 +1,5 @@
 import mongoose, { Schema, HydratedDocument } from "mongoose";
+import { IsArray, IsMongoId, IsNotEmpty, IsString } from "class-validator";
 
 interface IProfile {
   _id: string;
@@ -9,6 +10,28 @@ interface IProfile {
   files: Schema.Types.ObjectId[];
 }
 
+class ProfileValidator {
+  @IsString()
+  @IsNotEmpty()
+  bio!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  work!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  research!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  volunteering!: string;
+
+  @IsArray()
+  @IsMongoId({ each: true })
+  files!: Schema.Types.ObjectId[];
+}
+
 type IProfileDocument = HydratedDocument<IProfile>;
 
 const profileSchema = new Schema<IProfile>({
@@ -16,9 +39,13 @@ const profileSchema = new Schema<IProfile>({
   work: { type: String },
   research: { type: String },
   volunteering: { type: String },
-  files: { type: [Schema.Types.ObjectId], ref: "File" , default: [] },
+  files: { type: [Schema.Types.ObjectId], ref: "File", default: [] },
 });
 
-const Profile = mongoose.model<IProfile>("Profile", profileSchema, "profiles");
+const ProfileModel = mongoose.model<IProfile>(
+  "Profile",
+  profileSchema,
+  "profiles"
+);
 
-export { Profile, IProfile, IProfileDocument };
+export { ProfileModel, IProfile, ProfileValidator, IProfileDocument };

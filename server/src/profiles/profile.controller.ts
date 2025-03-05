@@ -1,6 +1,6 @@
-import ProfileService from "@/profiles/profileService";
+import ProfileService from "@/profiles/profile.service";
 import asyncHandler from "express-async-handler";
-import FileService from "@/files/fileService";
+import FileService from "@/files/file.service";
 
 class ProfileController {
   constructor(

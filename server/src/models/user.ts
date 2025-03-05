@@ -1,4 +1,5 @@
 import mongoose, { Schema, HydratedDocument } from "mongoose";
+import { IsBoolean, IsDate, IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 interface IUser {
   _id?: string;
@@ -9,6 +10,31 @@ interface IUser {
   profile: Schema.Types.ObjectId | string;
   isEmployer: boolean;
   entryDate: Date;
+}
+
+class UserValidator {
+  @IsString()
+  @IsNotEmpty()
+  first!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  last!: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+
+  @IsBoolean()
+  isEmployer!: boolean;
+
+  @IsDate()
+  @IsNotEmpty()
+  entryDate!: Date;
 }
 
 type IUserDocument = HydratedDocument<IUser>;
@@ -23,5 +49,5 @@ const userSchema = new Schema<IUser>({
   entryDate: { type: Date, required: true, default: () => Date.now() },
 });
 
-const User = mongoose.model<IUser>("User", userSchema, "users");
-export { User, IUser, IUserDocument };
+const UserModel = mongoose.model<IUser>("User", userSchema, "users");
+export { UserModel, IUser, UserValidator, IUserDocument };

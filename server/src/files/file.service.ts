@@ -1,6 +1,6 @@
 import { IFile } from "@/models/file";
 import { Model } from "mongoose";
-import { FileNotFoundError } from "@/files/fileErrors";
+import { FileNotFoundError } from "@/files/file.errors";
 
 class FileService {
   constructor(private files: Model<IFile>) {}
