@@ -1,7 +1,8 @@
 import { IUser } from "@/models/user";
 import ProfileService from "@/profiles/profile.service";
 import UserService from "@/users/user.service";
-import asyncHandler from "express-async-handler";
+import { HandleErrors } from "@/utils/errorHandler";
+import { Request, Response } from "express";
 
 class UserController {
   constructor(
@@ -9,16 +10,18 @@ class UserController {
     private profileService: ProfileService
   ) {}
 
-  getAllUsers = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async getAllUsers(req: Request, res: Response): Promise<void> {
     const users = await this.userService.getAllUsers();
     res.status(200).json({
       status: "success",
       data: users,
       message: "Users retrieved successfully",
     });
-  });
+  }
 
-  getUserById = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async getUserById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const user = await this.userService.getUserById(id);
     res.status(200).json({
@@ -26,9 +29,10 @@ class UserController {
       data: user,
       message: `User with id ${user._id} retrieved successfully`,
     });
-  });
+  }
 
-  createUser = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async createUser(req: Request, res: Response): Promise<void> {
     const userData: IUser = req.body;
     const profile = await this.profileService.createProfile();
     const user = await this.userService.createUser({
@@ -40,9 +44,10 @@ class UserController {
       data: user,
       message: `User with id ${user._id} created successfully`,
     });
-  });
+  }
 
-  updateUser = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async updateUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const userData: Partial<IUser> = req.body;
     const user = await this.userService.updateUser(id, userData);
@@ -51,9 +56,10 @@ class UserController {
       data: user,
       message: "User updated successfully",
     });
-  });
+  }
 
-  deleteUser = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async deleteUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const user = await this.userService.deleteUser(id);
     res.status(200).json({
@@ -61,7 +67,7 @@ class UserController {
       data: user,
       message: `User with id ${user._id} deleted successfully`,
     });
-  });
+  }
 }
 
 export default UserController;

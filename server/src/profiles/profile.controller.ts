@@ -1,6 +1,7 @@
 import ProfileService from "@/profiles/profile.service";
-import asyncHandler from "express-async-handler";
 import FileService from "@/files/file.service";
+import { Request, Response } from "express";
+import { HandleErrors } from "@/utils/errorHandler";
 
 class ProfileController {
   constructor(
@@ -8,16 +9,18 @@ class ProfileController {
     private fileService: FileService
   ) {}
 
-  getAllProfiles = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async getAllProfiles(req: Request, res: Response): Promise<void> {
     const profiles = await this.profileService.getAllProfiles();
     res.status(200).json({
       status: "success",
       data: profiles,
       message: "Profiles retrieved successfully",
     });
-  });
+  }
 
-  getProfileById = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async getProfileById (req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const profile = await this.profileService.getProfileById(id);
     res.status(200).json({
@@ -25,9 +28,10 @@ class ProfileController {
       data: profile,
       message: "Profile retrieved successfully",
     });
-  });
+  };
 
-  createProfile = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async createProfile (req: Request, res: Response): Promise<void> {
     const profileData = req.body;
     const profile = await this.profileService.createProfile(profileData);
     res.status(201).json({
@@ -35,9 +39,10 @@ class ProfileController {
       data: profile,
       message: `Profile with id ${profile._id} created successfully`,
     });
-  });
+  };
 
-  updateProfile = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async updateProfile (req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const profileData = req.body;
     const profile = await this.profileService.updateProfile(id, profileData);
@@ -46,9 +51,10 @@ class ProfileController {
       data: profile,
       message: "Profile updated successfully",
     });
-  });
+  };
 
-  addFile = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async addFile (req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const reqFile = req.file!;
     const file = await this.fileService.createFile({
@@ -62,9 +68,10 @@ class ProfileController {
       data: profile,
       message: "File added successfully",
     });
-  });
+  };
 
-  removeFile = asyncHandler(async (req, res): Promise<any> => {
+  @HandleErrors()
+  async removeFile (req: Request, res: Response): Promise<void> {
     const { profileId, fileId } = req.params;
     const profile = await this.profileService.removeFile(profileId, fileId);
     res.status(200).json({
@@ -72,7 +79,7 @@ class ProfileController {
       data: profile,
       message: "File removed successfully",
     });
-  });
+  };
 }
 
 export default ProfileController;
