@@ -1,7 +1,6 @@
-import { IsIn, IsNotEmpty, IsString, Validate } from "class-validator";
-import MaxFileSize from "@/utils/maxBufferSizeConstraint";
+import { IsIn, IsNotEmpty, IsString } from "class-validator";
 import mongoose, { Schema, HydratedDocument } from "mongoose";
-import MaxBufferSize from "@/utils/maxBufferSizeConstraint";
+import MaxBufferSize from "@/utils/maxBufferSize";
 
 interface IFile {
   _id?: string;

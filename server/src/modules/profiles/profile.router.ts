@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { ProfileValidator, ProfileModel } from "@/models/profile";
 import { FileModel, FileValidator } from "@/models/file";
-import ProfileService from "@/profiles/profile.service";
-import FileService from "@/files/file.service";
-import ProfileController from "@/profiles/profile.controller";
+import ProfileService from "@/modules/profiles/profile.service";
+import FileService from "@/modules/files/file.service";
+import ProfileController from "@/modules/profiles/profile.controller";
 import multer from "multer";
 import {
   validation,

@@ -1,6 +1,6 @@
 import { IUser } from "@/models/user";
-import ProfileService from "@/profiles/profile.service";
-import UserService from "@/users/user.service";
+import ProfileService from "@/modules/profiles/profile.service";
+import UserService from "@/modules/users/user.service";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 

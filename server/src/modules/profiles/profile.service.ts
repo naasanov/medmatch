@@ -1,8 +1,8 @@
 import { IProfile } from "@/models/profile";
 import { UpdateQuery } from "mongoose";
-import { ProfileNotFoundError } from "@/profiles/profile.errors";
+import { ProfileNotFoundError } from "@/modules/profiles/profile.errors";
 import { Model } from "mongoose";
-import { FileNotFoundError } from "@/files/file.errors";
+import { FileNotFoundError } from "@/modules/files/file.errors";
 
 class ProfileService {
   constructor(private profiles: Model<IProfile>) {}

@@ -24,8 +24,8 @@ function MaxBufferSize(maxMB: number, options?: ValidationOptions) {
       propertyName,
       options,
       validator: maxBufferSizeConstraint,
-    })
-  }
+    });
+  };
 }
 
 export default MaxBufferSize;

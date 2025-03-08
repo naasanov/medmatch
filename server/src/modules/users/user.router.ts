@@ -1,9 +1,9 @@
 import Router from "express";
 import { UserModel } from "@/models/user";
 import { ProfileModel } from "@/models/profile";
-import UserService from "@/users/user.service";
-import ProfileService from "@/profiles/profile.service";
-import UserController from "@/users/user.controller";
+import UserService from "@/modules/users/user.service";
+import ProfileService from "@/modules/profiles/profile.service";
+import UserController from "@/modules/users/user.controller";
 import {
   validation,
   validateBody,
@@ -21,7 +21,11 @@ router.get("/", userController.getAllUsers);
 
 router.get("/:id", validation(validateId("id")), userController.getUserById);
 
-router.post("/", validation(validateBody(UserValidator)), userController.createUser);
+router.post(
+  "/",
+  validation(validateBody(UserValidator)),
+  userController.createUser
+);
 
 router.put(
   "/:id",

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { FileModel, FileValidator } from "@/models/file";
-import FileService from "@/files/file.service";
-import FileController from "@/files/file.controller";
+import FileService from "@/modules/files/file.service";
+import FileController from "@/modules/files/file.controller";
 import multer from "multer";
 import {
   validateFile,
