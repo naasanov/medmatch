@@ -1,12 +1,11 @@
 import Router from "express";
-import { ProfileModel } from "@/modules/profiles/profile.model";
 import {
   UserService,
   UserController,
   UserValidator,
   UserModel,
 } from "@/modules/users";
-import { ProfileService } from "@/modules/profiles";
+import { ProfileService, ProfileModel } from "@/modules/profiles";
 import {
   validation,
   validateBody,

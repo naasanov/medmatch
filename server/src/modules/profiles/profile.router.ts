@@ -6,7 +6,7 @@ import {
   ProfileController,
   ProfileValidator,
 } from "@/modules/profiles";
-import { FileModel, FileValidator, FileService } from "@/modules/files/";
+import { FileModel, FileValidator, FileService } from "@/modules/files";
 import {
   validation,
   validateBody,
