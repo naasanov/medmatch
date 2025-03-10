@@ -1,6 +1,6 @@
-import { IUser } from "@/models/user";
+import { IUser } from "@/modules/users/user.model";
 import { Model, UpdateQuery } from "mongoose";
-import { UserNotFoundError, UserConflictError } from "./user.errors";
+import { UserNotFoundError, UserConflictError } from "./utils/user.errors";
 import { MongoError } from "mongodb";
 
 class UserService {
@@ -52,4 +52,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export { UserService };

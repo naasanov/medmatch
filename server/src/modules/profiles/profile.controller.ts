@@ -1,5 +1,5 @@
-import ProfileService from "@/modules/profiles/profile.service";
-import FileService from "@/modules/files/file.service";
+import { ProfileService } from "@/modules/profiles";
+import { FileService } from "@/modules/files/";
 import { Request, Response } from "express";
 import { HandleErrors } from "@/utils/errorHandler";
 
@@ -82,4 +82,4 @@ class ProfileController {
   }
 }
 
-export default ProfileController;
+export { ProfileController };

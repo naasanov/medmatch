@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CustomError } from "@/types/errors";
+import { HttpError } from "@/types/errors";
 import { GeneralCode } from "@/types/errorCodes";
 import asyncHandler from "express-async-handler";
 import dotenv from "dotenv";
@@ -10,13 +10,14 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
     console.error(err);
   }
 
-  if (err instanceof CustomError) {
-    return res.status(err.statusCode).json({
+  if (err instanceof HttpError) {
+    return res.status(err.status).json({
       status: "error",
       errors: [
         {
+          type: err.type,
           details: err.message,
-          code: err.errorCode,
+          code: err.code,
         },
       ],
     });
@@ -25,6 +26,7 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
       status: "error",
       errors: [
         {
+          type: "http",
           details: "Internal server error",
           code: GeneralCode.InternalServerError,
         },
@@ -34,7 +36,9 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
 };
 
 /**
- * Decorator that passes any caught error to the error handler
+ * Decorator that passes any caught error to the error handler. 
+ * The error handler will convert any caught `HttpError` to a JSON response and log the error in development.
+ * Any other error will be converted to a generic 500 error.
  */
 function HandleErrors() {
   return function (

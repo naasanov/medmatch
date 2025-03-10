@@ -1,8 +1,8 @@
-import { IProfile } from "@/models/profile";
+import { IProfile } from "@/modules/profiles/profile.model";
 import { UpdateQuery } from "mongoose";
-import { ProfileNotFoundError } from "@/modules/profiles/profile.errors";
+import { ProfileNotFoundError } from "@/modules/profiles/utils/profile.errors";
 import { Model } from "mongoose";
-import { FileNotFoundError } from "@/modules/files/file.errors";
+import { FileNotFoundError } from "@/modules/files/utils/file.errors";
 
 class ProfileService {
   constructor(private profiles: Model<IProfile>) {}
@@ -69,4 +69,4 @@ class ProfileService {
   }
 }
 
-export default ProfileService;
+export { ProfileService };

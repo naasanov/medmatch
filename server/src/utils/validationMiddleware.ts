@@ -4,7 +4,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { param, Result } from "express-validator";
 import { ValidationError as ClassValidationError } from "class-validator";
-import { ValidationError } from "@/types/responseBody";
+import { IValidationError } from "@/types/errors";
 
 /**
  * Helper function that adds `class-validator` erros to the `express-validator` `formattedValidationResult` array.
@@ -13,7 +13,7 @@ import { ValidationError } from "@/types/responseBody";
  */
 function addErrors(
   newErrors: ClassValidationError[],
-  errors: Result<ValidationError>
+  errors: Result<IValidationError>
 ): void {
   for (const error of newErrors) {
     for (const msg of Object.values(error.constraints ?? {}))
@@ -22,7 +22,7 @@ function addErrors(
         loc: "body",
         field: error.property,
         details: msg,
-      } as ValidationError);
+      } as IValidationError);
   }
 }
 

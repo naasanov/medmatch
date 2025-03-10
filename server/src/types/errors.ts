@@ -1,34 +1,60 @@
 import { GeneralCode, ErrorCode } from "@/types/errorCodes";
+import { Location } from "express-validator";
 
-class CustomError extends Error {
-  errorCode: ErrorCode;
-  statusCode: number;
-
-  constructor(message: string, errorCode: ErrorCode, statusCode: number) {
-    super(message);
-    this.errorCode = errorCode;
-    this.statusCode = statusCode;
-  }
+// Discriminated type union to enable efficient type assertion
+interface IApiError {
+  type: "http" | "validation";
+  details: string;
 }
 
-class NotFoundError extends CustomError {
+interface IHttpError extends IApiError {
+  type: "http";
+  code: ErrorCode;
+}
+
+interface IValidationError extends IApiError {
+  type: "validation";
+  loc: Location | "other";
+  field: string;
+}
+
+class HttpError extends Error implements IHttpError {
+  type: "http" = "http";
+
   constructor(
-    message: string,
-    errorCode: ErrorCode = GeneralCode.NotFound,
-    statusCode: number = 404
+    public details: string,
+    public code: ErrorCode,
+    public status: number
   ) {
-    super(message, errorCode, statusCode);
+    super(details);
   }
 }
 
-class ConflictError extends CustomError {
+class NotFoundError extends HttpError {
   constructor(
-    message: string,
-    errorCode: ErrorCode = GeneralCode.Conflict,
-    statusCode: number = 409
+    public details: string,
+    public code: ErrorCode = GeneralCode.NotFound,
+    public status: number = 404
   ) {
-    super(message, errorCode, statusCode);
+    super(details, code, status);
   }
 }
 
-export { CustomError, NotFoundError, ConflictError };
+class ConflictError extends HttpError {
+  constructor(
+    public details: string,
+    public code: ErrorCode = GeneralCode.Conflict,
+    public status: number = 409
+  ) {
+    super(details, code, status);
+  }
+}
+
+export {
+  HttpError,
+  NotFoundError,
+  ConflictError,
+  IApiError,
+  IHttpError,
+  IValidationError,
+};

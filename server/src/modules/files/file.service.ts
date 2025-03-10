@@ -1,6 +1,6 @@
-import { IFile } from "@/models/file";
+import { IFile } from "@/modules/files";
 import { Model } from "mongoose";
-import { FileNotFoundError } from "@/modules/files/file.errors";
+import { FileNotFoundError } from "@/modules/files/utils/file.errors";
 
 class FileService {
   constructor(private files: Model<IFile>) {}
@@ -31,4 +31,4 @@ class FileService {
   }
 }
 
-export default FileService;
+export { FileService };

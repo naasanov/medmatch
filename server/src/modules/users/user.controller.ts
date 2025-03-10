@@ -1,6 +1,6 @@
-import { IUser } from "@/models/user";
-import ProfileService from "@/modules/profiles/profile.service";
-import UserService from "@/modules/users/user.service";
+import { IUser } from "@/modules/users/user.model";
+import { ProfileService } from "@/modules/profiles";
+import { UserService } from "@/modules/users";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 
@@ -70,4 +70,4 @@ class UserController {
   }
 }
 
-export default UserController;
+export { UserController };

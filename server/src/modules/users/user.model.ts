@@ -12,31 +12,6 @@ interface IUser {
   entryDate: Date;
 }
 
-class UserValidator {
-  @IsString()
-  @IsNotEmpty()
-  first!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  last!: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password!: string;
-
-  @IsBoolean()
-  isEmployer!: boolean;
-
-  @IsDate()
-  @IsNotEmpty()
-  entryDate!: Date;
-}
-
 type IUserDocument = HydratedDocument<IUser>;
 
 const userSchema = new Schema<IUser>({
@@ -50,4 +25,4 @@ const userSchema = new Schema<IUser>({
 });
 
 const UserModel = mongoose.model<IUser>("User", userSchema, "users");
-export { UserModel, IUser, UserValidator, IUserDocument };
+export { UserModel, IUser, IUserDocument };

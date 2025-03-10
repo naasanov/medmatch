@@ -1,4 +1,4 @@
-import { ValidationError } from "@/types/responseBody";
+import { IValidationError } from "@/types/errors";
 import { validationResult } from "express-validator";
 
 /**
@@ -9,9 +9,9 @@ const formattedValidationResult = validationResult.withDefaults({
     ({
       type: "validation",
       loc: error.type === "field" ? error.location : "other",
-      field: error.type === "field" ? error.path : "",
+      field: error.type === "field" ? error.path : "no_field",
       details: error.msg,
-    } as ValidationError),
+    } as IValidationError),
 });
 
 export default formattedValidationResult;

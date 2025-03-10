@@ -1,30 +1,33 @@
 import { Router } from "express";
-import { FileModel, FileValidator } from "@/models/file";
-import FileService from "@/modules/files/file.service";
-import FileController from "@/modules/files/file.controller";
 import multer from "multer";
+import {
+  FileModel,
+  FileValidator,
+  FileController,
+  FileService,
+} from "@/modules/files/";
 import {
   validateFile,
   validateId,
   validation,
 } from "@/utils/validationMiddleware";
 
-const router = Router();
+const fileRouter = Router();
 const fileService = new FileService(FileModel);
 const fileController = new FileController(fileService);
 const upload = multer();
 
-router.get("/", fileController.getAllFiles);
+fileRouter.get("/", fileController.getAllFiles);
 
-router.get("/:id", validateId("id"), fileController.getFileById);
+fileRouter.get("/:id", validateId("id"), fileController.getFileById);
 
-router.post(
+fileRouter.post(
   "/",
   upload.single("file"),
   validation(validateFile(FileValidator)),
   fileController.createFile
 );
 
-router.delete("/:id", validateId("id"), fileController.deleteFile);
+fileRouter.delete("/:id", validateId("id"), fileController.deleteFile);
 
-export default router;
+export { fileRouter };

@@ -1,5 +1,4 @@
-import FileService from "@/modules/files/file.service";
-import { IFile } from "@/models/file";
+import { FileService, IFile } from "@/modules/files/";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 
@@ -55,4 +54,4 @@ class FileController {
   }
 }
 
-export default FileController;
+export { FileController };
