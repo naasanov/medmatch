@@ -1,4 +1,4 @@
-import { NotFoundError } from "@/types/errors";
+import { ConflictError, NotFoundError } from "@/types/errors";
 import { FileCode } from "@/types/errorCodes";
 
 class FileNotFoundError extends NotFoundError {
@@ -7,4 +7,10 @@ class FileNotFoundError extends NotFoundError {
   }
 }
 
-export { FileNotFoundError}
+class FileConflictError extends ConflictError {
+  constructor(message: string = "File already exists") {
+    super(message, FileCode.FileConflict);
+  }
+}
+
+export { FileNotFoundError, FileConflictError };

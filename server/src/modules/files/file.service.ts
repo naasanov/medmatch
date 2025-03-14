@@ -1,31 +1,33 @@
-import { IFile } from "@/modules/files";
+import { File, FileDoc } from "@/modules/files";
 import { Model } from "mongoose";
 import { FileNotFoundError } from "@/modules/files/utils/file.errors";
+import { ID } from "@/types/mongoose";
 
 class FileService {
-  constructor(private files: Model<IFile>) {}
+  constructor(private files: Model<File>) {}
 
-  async getAllFiles(): Promise<IFile[]> {
-    return this.files.find<IFile>().exec();
+  async getAllFiles(): Promise<(File & ID)[]> {
+    const test = await this.files.find<FileDoc>().exec();
+    return test;
   }
 
-  async getFileById(id: string): Promise<IFile> {
-    const file = await this.files.findById<IFile>(id).exec();
+  async getFileById(fileId: string): Promise<File & ID> {
+    const file = await this.files.findById<FileDoc>(fileId).exec();
     if (!file) {
-      throw new FileNotFoundError(`File with id ${id} not found`);
+      throw new FileNotFoundError(`File with id ${fileId} not found`);
     }
     return file;
   }
 
-  async createFile(fileData: IFile): Promise<IFile> {
+  async createFile(fileData: File): Promise<File & ID> {
     const file = new this.files(fileData);
     return file.save();
   }
 
-  async deleteFile(id: string): Promise<IFile> {
-    const file = await this.files.findByIdAndDelete<IFile>(id).exec();
+  async deleteFile(fileId: string): Promise<File & ID> {
+    const file = await this.files.findByIdAndDelete<FileDoc>(fileId).exec();
     if (!file) {
-      throw new FileNotFoundError(`File with id ${id} not found`);
+      throw new FileNotFoundError(`File with id ${fileId} not found`);
     }
     return file;
   }

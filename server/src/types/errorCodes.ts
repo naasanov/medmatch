@@ -23,6 +23,7 @@ enum ProfileCode {
 
 enum FileCode {
   FileNotFound = 'FILE_NOT_FOUND',
+  FileConflict = 'FILE_CONFLICT',
 }
 
 type ErrorCode = GeneralCode | UserCode | ProfileCode | FileCode;

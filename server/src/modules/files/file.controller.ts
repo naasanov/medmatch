@@ -1,4 +1,4 @@
-import { FileService, IFile } from "@/modules/files/";
+import { FileService, File } from "@/modules/files/";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 
@@ -29,12 +29,12 @@ class FileController {
   @HandleErrors()
   async createFile(req: Request, res: Response): Promise<void> {
     const { originalname, mimetype, buffer } = req.file!;
-    const fileData: IFile = {
+    const fileData = {
       name: originalname,
       type: mimetype,
       data: buffer,
     };
-    const file = await this.fileService.createFile(fileData);
+    const file = await this.fileService.createFile(fileData as File);
     res.status(201).json({
       success: true,
       message: `File with id ${file._id} created successfully`,

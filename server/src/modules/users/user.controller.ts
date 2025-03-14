@@ -1,14 +1,10 @@
-import { IUser } from "@/modules/users/user.model";
-import { ProfileService } from "@/modules/profiles";
-import { UserService } from "@/modules/users";
+import { UserService, User } from "@/modules/users";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
+import { FileService, File } from "@/modules/files";
 
 class UserController {
-  constructor(
-    private userService: UserService,
-    private profileService: ProfileService
-  ) {}
+  constructor(private userService: UserService, private fileService: FileService) {}
 
   @HandleErrors()
   async getAllUsers(req: Request, res: Response): Promise<void> {
@@ -33,12 +29,8 @@ class UserController {
 
   @HandleErrors()
   async createUser(req: Request, res: Response): Promise<void> {
-    const userData: IUser = req.body;
-    const profile = await this.profileService.createProfile();
-    const user = await this.userService.createUser({
-      ...userData,
-      profile: profile._id,
-    });
+    const userData: User = req.body;
+    const user = await this.userService.createUser(userData);
     res.status(201).json({
       status: "success",
       data: user,
@@ -49,7 +41,7 @@ class UserController {
   @HandleErrors()
   async updateUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    const userData: Partial<IUser> = req.body;
+    const userData = req.body;
     const user = await this.userService.updateUser(id, userData);
     res.status(200).json({
       status: "success",
@@ -66,6 +58,35 @@ class UserController {
       status: "success",
       data: user,
       message: `User with id ${user._id} deleted successfully`,
+    });
+  }
+
+  @HandleErrors()
+  async addFile(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    const fileData = req.file!;
+    const file = await this.fileService.createFile({
+      name: fileData.originalname,
+      type: fileData.mimetype,
+      data: fileData.buffer,
+    } as File);
+    const user = await this.userService.addFile(id, file._id.toString());
+    res.status(200).json({
+      status: "success",
+      data: user,
+      message: "File added successfully",
+    });
+  }
+
+  @HandleErrors()
+  async removeFile(req: Request, res: Response): Promise<void> {
+    const { userId, fileId } = req.params;
+    await this.fileService.deleteFile(fileId);
+    const user = await this.userService.removeFile(userId, fileId);
+    res.status(200).json({
+      status: "success",
+      data: user,
+      message: "File removed successfully",
     });
   }
 }

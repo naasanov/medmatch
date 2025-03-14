@@ -4,7 +4,10 @@ import {
   IsEmail,
   IsBoolean,
   IsDate,
+  IsArray,
+  IsMongoId,
 } from "class-validator";
+import { Schema } from "mongoose";
 
 class UserValidator {
   @IsString()
@@ -31,4 +34,26 @@ class UserValidator {
   entryDate!: Date;
 }
 
-export { UserValidator };
+class ProfileValidator {
+  @IsString()
+  @IsNotEmpty()
+  bio!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  work!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  research!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  volunteering!: string;
+
+  @IsArray()
+  @IsMongoId({ each: true })
+  files!: Schema.Types.ObjectId[];
+}
+
+export { UserValidator, ProfileValidator };

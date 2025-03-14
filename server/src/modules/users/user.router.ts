@@ -5,18 +5,21 @@ import {
   UserValidator,
   UserModel,
 } from "@/modules/users";
-import { ProfileService, ProfileModel } from "@/modules/profiles";
+import { FileModel, FileService, FileValidator } from "@/modules/files";
 import {
   validation,
   validateBody,
   validatePartialBody,
   validateId,
+  validateFile,
 } from "@/utils/validationMiddleware";
+import multer from "multer";
 
 const userRouter = Router();
 const userService = new UserService(UserModel);
-const profileService = new ProfileService(ProfileModel);
-const userController = new UserController(userService, profileService);
+const fileService = new FileService(FileModel);
+const userController = new UserController(userService, fileService);
+const upload = multer();
 
 userRouter.get("/", userController.getAllUsers);
 
@@ -32,7 +35,7 @@ userRouter.post(
   userController.createUser
 );
 
-userRouter.put(
+userRouter.patch(
   "/:id",
   validation(validatePartialBody(UserValidator), validateId("id")),
   userController.updateUser
@@ -42,6 +45,13 @@ userRouter.delete(
   "/:id",
   validation(validateId("id")),
   userController.deleteUser
+);
+
+userRouter.post(
+  "/:id/files",
+  upload.single("file"),
+  validation(validateId("id"), validateFile(FileValidator)),
+  userController.addFile
 );
 
 export { userRouter };

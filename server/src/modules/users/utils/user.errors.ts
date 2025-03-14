@@ -1,5 +1,11 @@
-import { UserCode } from "@/types/errorCodes";
+import { UserCode, ProfileCode } from "@/types/errorCodes";
 import { ConflictError, NotFoundError } from "@/types/errors";
+
+class ProfileNotFoundError extends NotFoundError {
+  constructor(message: string = "Profile not found") {
+    super(message, ProfileCode.ProfileNotFound);
+  }
+}
 
 class UserNotFoundError extends NotFoundError {
   constructor(message: string = "User not found") {
@@ -13,4 +19,4 @@ class UserConflictError extends ConflictError {
   }
 }
 
-export { UserNotFoundError, UserConflictError };
+export { UserNotFoundError, UserConflictError, ProfileNotFoundError };
