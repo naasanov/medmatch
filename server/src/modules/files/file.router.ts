@@ -5,7 +5,7 @@ import {
   FileValidator,
   FileController,
   FileService,
-} from "@/modules/files/";
+} from "@/modules/files";
 import {
   validateFile,
   validateId,
