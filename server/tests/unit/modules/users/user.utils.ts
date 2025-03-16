@@ -35,9 +35,9 @@ async function createTestFile(data?: Partial<File>): Promise<File & ID> {
   return file;
 }
 
-async function createTestUser(data?: Partial<User>): Promise<User & ID> {
+async function defaultUserData(): Promise<User> {
   const testFile = await createTestFile();
-  const defaultUser: User = {
+  return {
     first: "Test",
     last: "User",
     email: `test-${Date.now()}@example.com`,
@@ -49,6 +49,10 @@ async function createTestUser(data?: Partial<User>): Promise<User & ID> {
     },
     entryDate: new Date(),
   };
+}
+
+async function createTestUser(data?: Partial<User>): Promise<User & ID> {
+  const defaultUser = await defaultUserData();
 
   const userData = {
     ...defaultUser,
@@ -91,6 +95,7 @@ class TestUserValidator extends UserValidator {
 }
 
 export {
+  defaultUserData,
   createTestUser,
   createTestFile,
   TestUserValidator,

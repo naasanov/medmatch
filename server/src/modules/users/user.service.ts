@@ -39,7 +39,7 @@ class UserService {
       return user.populate<{ profile: PopulatedProfile }>("profile.files");
     } catch (error) {
       if (error instanceof MongoError && error.code === 11000) {
-        throw new UserConflictError("User already exists");
+        throw new UserConflictError(`User with email ${userData.email} already exists`);
       }
       throw error;
     }
