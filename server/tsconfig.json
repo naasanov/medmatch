@@ -11,8 +11,10 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#/*": ["./tests/*"]
     },
     "types": ["node", "@types/jest"]
   },

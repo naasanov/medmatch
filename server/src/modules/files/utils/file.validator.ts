@@ -15,4 +15,4 @@ class FileValidator {
   buffer!: Buffer;
 }
 
-export { FileValidator}
+export { FileValidator };

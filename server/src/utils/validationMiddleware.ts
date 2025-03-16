@@ -45,7 +45,9 @@ function validateBodyByClass<T extends object>(
     res: Response,
     next: NextFunction
   ): Promise<any> => {
-    const instance = plainToInstance(classType, req[field]);
+    const instance = plainToInstance(classType, req[field], {
+      excludeExtraneousValues: true,
+    });
     const result = await validate(instance, {
       skipMissingProperties: isPartialBody,
     });
@@ -59,7 +61,7 @@ function validateBodyByClass<T extends object>(
 }
 
 /**
- * Returns a request handler that validates the request body against 
+ * Returns a request handler that validates the request body against
  * a class defined with `class-validator`, ensuring they are an exact match.
  * Most commonly used for POST requests.
  * @param classType The class to validate the request body against
@@ -68,8 +70,8 @@ const validateBody = <T extends object>(classType: ClassType<T>) =>
   validateBodyByClass<T>(classType, false);
 
 /**
- * Returns a request handler that validates the request body against a class 
- * defined with `class-validator`, only checking the fields present in the body. 
+ * Returns a request handler that validates the request body against a class
+ * defined with `class-validator`, only checking the fields present in the body.
  * Most commonly used for PUT/PATCH requests.
  * @param classType The class to validate the request body against
  */
@@ -77,7 +79,7 @@ const validatePartialBody = <T extends object>(classType: ClassType<T>) =>
   validateBodyByClass<T>(classType, true);
 
 /**
- * Returns a request handler that validates the file on the request object 
+ * Returns a request handler that validates the file on the request object
  * against a class defined with `class-validator`.
  * @param classType The class to validate the file against
  */
@@ -112,8 +114,16 @@ function endValidation(req: Request, res: Response, next: NextFunction): any {
  * @param validations Any number of validation middlewares
  * @returns A list of validation middlewares that is handled before the controller executes.
  */
-function validation(...validations: (RequestHandler | RequestHandler[])[]): RequestHandler[] {
+function validation(
+  ...validations: (RequestHandler | RequestHandler[])[]
+): RequestHandler[] {
   return [...validations.flat(), endValidation];
 }
 
-export { validation, validateBody, validatePartialBody, validateId, validateFile };
+export {
+  validation,
+  validateBody,
+  validatePartialBody,
+  validateId,
+  validateFile,
+};
