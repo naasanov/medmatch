@@ -24,11 +24,8 @@ npm ci
 ```
 ### Setting Up Environment Variables
 You will need to create a `.env` file in the `/server` directory.
-Run the following command from the root directory.
-```
-touch server/.env
-```
-Then copy paste the following into the newly created file
+Note: The file name should be ".env" verbatim, no file ending.
+Then copy paste the following into the newly created file.
 ```.env
 DB_URI=[ASK TECH LEAD]
 DEV_PORT=4000
