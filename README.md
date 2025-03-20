@@ -12,6 +12,7 @@ Medmatch is a career oriented social media platform, similar to LinkedIn, design
     * Validation - express-validator, class-validator
     * Testing - jest
 ## Onboarding
+### Installing Dependencies
 To get started after cloning the repo, first install the necessary dependencies.
 The `client` and `server` folders are individual `npm` packages, so you will need to install the respective dependencies separately.  
 Run the following commands from the root folder.
@@ -21,6 +22,20 @@ npm install
 cd ../server
 npm install
 ```
+### Setting Up Environment Variables
+You will need to create a `.env` file in the `/server` directory.
+Run the following command from the root directory.
+```
+touch server/.env
+```
+Then copy paste the following into the newly created file
+```.env
+DB_URI=[ASK TECH LEAD]
+DEV_PORT=4000
+NODE_ENV=development
+```
+You'll have to ask the tech lead for some of the variables.
+### Starting The Development Server
 In order to start the frontend development server, run the following command from the `client` directory.
 ```
 npm run dev
