@@ -9,7 +9,7 @@ node_modules/
 !/client/.yarn/versions
 
 # testing
-/client/coverage
+coverage/
 
 # next.js
 /client/.next/
