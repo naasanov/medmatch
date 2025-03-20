@@ -18,9 +18,9 @@ The `client` and `server` folders are individual `npm` packages, so you will nee
 Run the following commands from the root folder.
 ```sh
 cd client
-npm install
+npm ci
 cd ../server
-npm install
+npm ci
 ```
 ### Setting Up Environment Variables
 You will need to create a `.env` file in the `/server` directory.
