@@ -11,6 +11,9 @@ import { Binary } from "mongodb";
 @ValidatorConstraint({ name: "MaxBufferSize", async: false })
 class maxBufferSizeConstraint implements ValidatorConstraintInterface {
   validate(buffer: Buffer | Binary, args: ValidationArguments) {
+    if (buffer === undefined || buffer === null) {
+      return false;
+    }
     const length = buffer instanceof Binary ? buffer.length() : buffer.length;
     return length <= (args.constraints[0] as number) * 1024 * 1024;
   }

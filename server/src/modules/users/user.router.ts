@@ -39,6 +39,11 @@ userRouter.post(
 userRouter.patch(
   "/:id",
   validation(
+    body("profile")
+      .optional()
+      .not()
+      .isEmpty()
+      .withMessage("Profile field cannot be null or undefined if provided."),
     body("profile.files")
       .not()
       .exists()

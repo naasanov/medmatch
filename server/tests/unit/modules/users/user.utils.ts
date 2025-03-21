@@ -21,7 +21,7 @@ import MaxBufferSize from "@/utils/maxBufferSize";
 async function createTestFile(data?: Partial<File>): Promise<File & ID> {
   const defaultFile: File = {
     type: "image/png",
-    name: "Test",
+    name: `Test-${Date.now()}`,
     data: Buffer.from("test data"),
   };
 
@@ -38,8 +38,8 @@ async function createTestFile(data?: Partial<File>): Promise<File & ID> {
 async function defaultUserData(): Promise<User> {
   const testFile = await createTestFile();
   return {
-    first: "Test",
-    last: "User",
+    first: `Test-${Date.now()}`,
+    last: `User-${Date.now()}`,
     email: `test-${Date.now()}@example.com`,
     password: "password123",
     isEmployer: false,

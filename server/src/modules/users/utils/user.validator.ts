@@ -9,6 +9,7 @@ import {
   IsMongoId,
   ValidateNested,
   IsOptional,
+  IsDefined,
 } from "class-validator";
 
 class ProfileValidator {
@@ -53,6 +54,7 @@ class UserValidator {
   @IsNotEmpty()
   entryDate!: Date;
 
+  @IsDefined()
   @ValidateNested()
   @Type(() => ProfileValidator)
   profile!: ProfileValidator;
