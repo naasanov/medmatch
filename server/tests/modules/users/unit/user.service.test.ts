@@ -10,7 +10,7 @@ import {
   createTestUser,
   defaultUserData,
   TestUserValidator,
-} from "#/unit/modules/users/user.utils";
+} from "#/modules/users/user.utils";
 import { expectMatch } from "#/utils/validation";
 import { ObjectId } from "mongodb";
 import { FileConflictError } from "@/modules/files";
