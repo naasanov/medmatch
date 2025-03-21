@@ -2,9 +2,10 @@ import {
   ProfileValidator,
   User,
   UserModel,
+  UserService,
   UserValidator,
 } from "@/modules/users";
-import { File, FileModel } from "@/modules/files";
+import { File, FileModel, FileService } from "@/modules/files";
 import { ID } from "@/types/mongoose";
 import {
   IsArray,
@@ -17,6 +18,8 @@ import {
 import { Types } from "mongoose";
 import { Type } from "class-transformer";
 import MaxBufferSize from "@/utils/maxBufferSize";
+
+// Helper Functions
 
 async function createTestFile(data?: Partial<File>): Promise<File & ID> {
   const defaultFile: File = {
@@ -64,6 +67,8 @@ async function createTestUser(data?: Partial<User>): Promise<User & ID> {
   return user;
 }
 
+// Validators
+
 class TestFileValidator {
   @IsString()
   @IsNotEmpty()
@@ -94,10 +99,36 @@ class TestUserValidator extends UserValidator {
   profile!: TestProfileValidator;
 }
 
+// Mocks
+
+const createMockFileService = () => {
+  const fileService = {} as jest.Mocked<FileService>;
+  fileService.getAllFiles = jest.fn();
+  fileService.getFileById = jest.fn();
+  fileService.createFile = jest.fn();
+  fileService.deleteFile = jest.fn();
+  return fileService;
+};
+
+const createMockUserService = () => {
+  const userService = {} as jest.Mocked<UserService>;
+  userService.getAllUsers = jest.fn();
+  userService.getUserById = jest.fn();
+  userService.createUser = jest.fn();
+  userService.updateUser = jest.fn();
+  userService.deleteUser = jest.fn();
+  userService.addFile = jest.fn();
+  userService.removeFile = jest.fn();
+  return userService;
+};
+
 export {
   defaultUserData,
   createTestUser,
   createTestFile,
   TestUserValidator,
   TestProfileValidator,
+  TestFileValidator,
+  createMockFileService,
+  createMockUserService,
 };
