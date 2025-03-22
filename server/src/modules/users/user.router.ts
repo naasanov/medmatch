@@ -14,6 +14,7 @@ import {
   validateFile,
 } from "@/utils/validationMiddleware";
 import multer from "multer";
+import { body } from "express-validator";
 
 const userRouter = Router();
 const userService = new UserService(UserModel);
@@ -37,7 +38,21 @@ userRouter.post(
 
 userRouter.patch(
   "/:id",
-  validation(validatePartialBody(UserValidator), validateId("id")),
+  validation(
+    body("profile")
+      .optional()
+      .not()
+      .isEmpty()
+      .withMessage("Profile field cannot be null or undefined if provided."),
+    body("profile.files")
+      .not()
+      .exists()
+      .withMessage(
+        "Files array should not be updated with PATCH. Please use user file routes."
+      ),
+    validateId("id"),
+    validatePartialBody(UserValidator)
+  ),
   userController.updateUser
 );
 
@@ -52,6 +67,12 @@ userRouter.post(
   upload.single("file"),
   validation(validateId("id"), validateFile(FileValidator)),
   userController.addFile
+);
+
+userRouter.delete(
+  "/:id/files/:fileId",
+  validation(validateId("id"), validateId("fileId")),
+  userController.removeFile
 );
 
 export { userRouter };

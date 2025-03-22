@@ -39,7 +39,9 @@ class UserService {
       return user.populate<{ profile: PopulatedProfile }>("profile.files");
     } catch (error) {
       if (error instanceof MongoError && error.code === 11000) {
-        throw new UserConflictError("User already exists");
+        throw new UserConflictError(
+          `User with email ${userData.email} already exists`
+        );
       }
       throw error;
     }
@@ -49,14 +51,23 @@ class UserService {
     userId: string,
     userData: Partial<User>
   ): Promise<PopulatedUser> {
-    const user = await this.users
-      .findByIdAndUpdate<UserDoc>(userId, userData, { new: true })
-      .populate<{ profile: PopulatedProfile }>("profile.files")
-      .exec();
-    if (!user) {
-      throw new UserNotFoundError(`User with id ${userId} not found`);
+    try {
+      const user = await this.users
+        .findByIdAndUpdate<UserDoc>(userId, userData, { new: true })
+        .populate<{ profile: PopulatedProfile }>("profile.files")
+        .exec();
+      if (!user) {
+        throw new UserNotFoundError(`User with id ${userId} not found`);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof MongoError && error.code === 11000) {
+        throw new UserConflictError(
+          `User with email ${userData.email} already exists`
+        );
+      }
+      throw error;
     }
-    return user;
   }
 
   async deleteUser(userId: string): Promise<PopulatedUser> {

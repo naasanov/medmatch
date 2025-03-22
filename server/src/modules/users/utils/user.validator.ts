@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsString,
   IsNotEmpty,
@@ -6,8 +7,28 @@ import {
   IsDate,
   IsArray,
   IsMongoId,
+  ValidateNested,
+  IsOptional,
+  IsDefined,
 } from "class-validator";
-import { Schema } from "mongoose";
+
+class ProfileValidator {
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @IsOptional()
+  @IsString()
+  work?: string;
+
+  @IsOptional()
+  @IsString()
+  research?: string;
+
+  @IsOptional()
+  @IsString()
+  volunteering?: string;
+}
 
 class UserValidator {
   @IsString()
@@ -32,28 +53,11 @@ class UserValidator {
   @IsDate()
   @IsNotEmpty()
   entryDate!: Date;
-}
 
-class ProfileValidator {
-  @IsString()
-  @IsNotEmpty()
-  bio!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  work!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  research!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  volunteering!: string;
-
-  @IsArray()
-  @IsMongoId({ each: true })
-  files!: Schema.Types.ObjectId[];
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => ProfileValidator)
+  profile!: ProfileValidator;
 }
 
 export { UserValidator, ProfileValidator };

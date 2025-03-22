@@ -18,7 +18,7 @@ const profileSchema = new Schema({
 const userSchema = new Schema({
   first: { type: String, required: true },
   last: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, lowercase: true }, // lowercase email to ensure case insensitive uniqueness
   password: { type: String, required: true },
   profile: { type: profileSchema, default: () => ({}) },
   isEmployer: { type: Boolean, required: true },
@@ -36,7 +36,6 @@ interface UserDoc extends HydratedDocument<User> {
   profile: ProfileDoc;
 }
 type PopulatedUser = Replace<User & ID, { profile: PopulatedProfile }>;
-
 
 type UserModelType = ModelWithOverrides<User, UserDoc>;
 const UserModel = mongoose.model<User, UserModelType>(
