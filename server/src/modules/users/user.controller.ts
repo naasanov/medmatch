@@ -4,7 +4,10 @@ import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
 
 class UserController {
-  constructor(private userService: UserService, private fileService: FileService) {}
+  constructor(
+    private userService: UserService,
+    private fileService: FileService
+  ) {}
 
   @HandleErrors()
   async getAllUsers(req: Request, res: Response): Promise<void> {
@@ -46,7 +49,7 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: "User updated successfully",
+      message: `User with id ${user._id} updated successfully`,
     });
   }
 
@@ -74,7 +77,7 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: "File added successfully",
+      message: `File ${file.name} with id ${file._id} successfully added to user with id ${user._id}`,
     });
   }
 

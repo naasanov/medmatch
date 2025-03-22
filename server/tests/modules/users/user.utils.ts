@@ -1,6 +1,9 @@
 import {
+  PopulatedProfile,
   ProfileValidator,
   User,
+  UserDoc,
+  PopulatedUser,
   UserModel,
   UserService,
   UserValidator,
@@ -54,7 +57,7 @@ async function defaultUserData(): Promise<User> {
   };
 }
 
-async function createTestUser(data?: Partial<User>): Promise<User & ID> {
+async function createTestUser(data?: Partial<User>): Promise<UserDoc> {
   const defaultUser = await defaultUserData();
 
   const userData = {
@@ -65,6 +68,16 @@ async function createTestUser(data?: Partial<User>): Promise<User & ID> {
   const user = new UserModel(userData);
   await user.save();
   return user;
+}
+
+async function createPopulatedTestUser(
+  data?: Partial<User>
+): Promise<PopulatedUser> {
+  const user = await createTestUser(data);
+  const populatedUser = await user.populate<{ profile: PopulatedProfile }>(
+    "profile.files"
+  );
+  return populatedUser;
 }
 
 // Validators
@@ -126,6 +139,7 @@ export {
   defaultUserData,
   createTestUser,
   createTestFile,
+  createPopulatedTestUser,
   TestUserValidator,
   TestProfileValidator,
   TestFileValidator,

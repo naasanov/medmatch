@@ -29,7 +29,7 @@ node_modules/
 /client/yarn-error.log*
 /client/.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
 
 # vercel

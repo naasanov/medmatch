@@ -1,11 +1,15 @@
+import "reflect-metadata";
 import { UserController, UserService } from "@/modules/users";
 import { FileService } from "@/modules/files";
 import {
   createMockUserService,
   createMockFileService,
+  createPopulatedTestUser,
+  defaultUserData,
 } from "#/modules/users/user.utils";
 import { createMockRequest, createMockResponse } from "#/utils/express.mocks";
 import { Request, Response } from "express";
+import { ObjectId } from "mongodb";
 
 describe("UserController", () => {
   let userService: jest.Mocked<UserService>;
@@ -23,5 +27,173 @@ describe("UserController", () => {
 
     req = createMockRequest();
     res = createMockResponse();
+  });
+
+  describe("getAllUsers", () => {
+    it("should return all users", async () => {
+      const mockUsers = [
+        await createPopulatedTestUser(),
+        await createPopulatedTestUser(),
+      ];
+      userService.getAllUsers.mockResolvedValue(mockUsers);
+
+      await userController.getAllUsers(req, res);
+
+      expect(userService.getAllUsers).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockUsers,
+        message: "Users retrieved successfully",
+      });
+    });
+  });
+
+  describe("getUserById", () => {
+    it("should return a user by id", async () => {
+      const mockUser = await createPopulatedTestUser();
+      userService.getUserById.mockResolvedValue(mockUser);
+      req.params.id = mockUser._id.toString();
+
+      await userController.getUserById(req, res);
+
+      expect(userService.getUserById).toHaveBeenCalledWith(
+        mockUser._id.toString()
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockUser,
+        message: `User with id ${mockUser._id} retrieved successfully`,
+      });
+    });
+  });
+
+  describe("createUser", () => {
+    it("should create a new user", async () => {
+      req.body = await defaultUserData();
+      const mockUser = { ...req.body, _id: new ObjectId() };
+      userService.createUser.mockResolvedValue(mockUser);
+
+      await userController.createUser(req, res);
+
+      expect(userService.createUser).toHaveBeenCalledWith(req.body);
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockUser,
+        message: `User with id ${mockUser._id} created successfully`,
+      });
+    });
+  });
+
+  describe("updateUser", () => {
+    it("should update an existing user", async () => {
+      const mockUser = await createPopulatedTestUser();
+      req.params.id = mockUser._id.toString();
+      req.body = { name: "Updated Name" };
+      const updatedUser = { ...mockUser, name: "Updated Name" };
+      userService.updateUser.mockResolvedValue(updatedUser);
+
+      await userController.updateUser(req, res);
+
+      expect(userService.updateUser).toHaveBeenCalledWith(
+        mockUser._id.toString(),
+        req.body
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: updatedUser,
+        message: `User with id ${updatedUser._id} updated successfully`,
+      });
+    });
+  });
+
+  describe("deleteUser", () => {
+    it("should delete a user by id", async () => {
+      const mockUser = await createPopulatedTestUser();
+      req.params.id = mockUser._id.toString();
+      userService.deleteUser.mockResolvedValue(mockUser);
+
+      await userController.deleteUser(req, res);
+
+      expect(userService.deleteUser).toHaveBeenCalledWith(
+        mockUser._id.toString()
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockUser,
+        message: `User with id ${mockUser._id} deleted successfully`,
+      });
+    });
+  });
+
+  describe("addFile", () => {
+    it("should add a file to a user", async () => {
+      const mockUser = await createPopulatedTestUser();
+      const mockFile = {
+        _id: new ObjectId(),
+        name: "test-file.jpg",
+        type: "image/jpeg" as const,
+        data: Buffer.from("test"),
+      };
+      req.params.id = mockUser._id.toString();
+      req.file = {
+        originalname: mockFile.name,
+        mimetype: mockFile.type,
+        buffer: mockFile.data,
+      } as unknown as Express.Multer.File;
+      fileService.createFile.mockResolvedValue(mockFile);
+      const mockReturn = mockUser;
+      mockReturn.profile.files = [...mockUser.profile.files, mockFile];
+      userService.addFile.mockResolvedValue(mockReturn);
+
+      await userController.addFile(req, res);
+
+      expect(fileService.createFile).toHaveBeenCalledWith({
+        name: req.file.originalname,
+        type: req.file.mimetype,
+        data: req.file.buffer,
+      });
+      expect(userService.addFile).toHaveBeenCalledWith(
+        mockUser._id.toString(),
+        mockFile._id.toString()
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockReturn,
+        message: `File ${mockFile.name} with id ${mockFile._id} successfully added to user with id ${mockUser._id}`,
+      });
+    });
+  });
+
+  describe("removeFile", () => {
+    it("should remove a file from a user", async () => {
+      const mockUser = await createPopulatedTestUser();
+      const mockFile = mockUser.profile.files[0];
+      req.params.userId = mockUser._id.toString();
+      req.params.fileId = mockFile._id.toString();
+      userService.removeFile.mockResolvedValue(mockUser);
+      fileService.deleteFile.mockResolvedValue(mockFile);
+
+      await userController.removeFile(req, res);
+
+      expect(userService.removeFile).toHaveBeenCalledWith(
+        mockUser._id.toString(),
+        mockFile._id.toString()
+      );
+      expect(fileService.deleteFile).toHaveBeenCalledWith(
+        mockFile._id.toString()
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: "success",
+        data: mockUser,
+        message: `File removed successfully`,
+      });
+    });
   });
 });

@@ -13,7 +13,7 @@ import {
 } from "#/modules/users/user.utils";
 import { expectMatch } from "#/utils/validation";
 import { ObjectId } from "mongodb";
-import { FileConflictError } from "@/modules/files";
+import { FileConflictError, FileNotFoundError } from "@/modules/files";
 
 describe("UserService", () => {
   let userService: UserService;
@@ -328,6 +328,23 @@ describe("UserService", () => {
       await expect(
         userService.removeFile(new ObjectId().toString(), file._id.toString())
       ).rejects.toThrow(UserNotFoundError);
+    });
+
+    it("should throw a FileNotFoundError if the file does not exist", async () => {
+      expect.assertions(1);
+      const user = await createTestUser();
+      await expect(
+        userService.removeFile(user._id.toString(), new ObjectId().toString())
+      ).rejects.toThrow(FileNotFoundError);
+    });
+
+    it("should throw a FileNotFoundError if the file does not exist for the user", async () => {
+      expect.assertions(1);
+      const user = await createTestUser();
+      const file = await createTestFile();
+      await expect(
+        userService.removeFile(user._id.toString(), file._id.toString())
+      ).rejects.toThrow(FileNotFoundError);
     });
   });
 });

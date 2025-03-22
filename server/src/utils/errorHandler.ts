@@ -1,7 +1,6 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler, NextFunction } from "express";
 import { HttpError } from "@/types/errors";
 import { GeneralCode } from "@/types/errorCodes";
-import asyncHandler from "express-async-handler";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -36,7 +35,7 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
 };
 
 /**
- * Decorator that passes any caught error to the error handler. 
+ * Decorator that passes any caught error to the error handler.
  * The error handler will convert any caught `HttpError` to a JSON response and log the error in development.
  * Any other error will be converted to a generic 500 error.
  */
@@ -52,7 +51,19 @@ function HandleErrors() {
       throw new Error(`@HandleErrors can only be applied to methods.`);
     }
 
-    descriptor.value = asyncHandler(originalMethod);
+    descriptor.value = async function (
+      this: any,
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) {
+      try {
+        await originalMethod.apply(this, [req, res, next]);
+      } catch (error) {
+        console.log(error)
+        next(error);
+      }
+    };
   };
 }
 
