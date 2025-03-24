@@ -21,6 +21,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Database connection
 function connectionString() {
   const dialect = "mongodb+srv";
   const username = process.env.DB_USERNAME;
@@ -32,7 +33,6 @@ function connectionString() {
   return `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster};`
 }
 
-// Database connection
 mongoose.connect(connectionString());
 const db = mongoose.connection;
 
