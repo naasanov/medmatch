@@ -22,20 +22,25 @@ npm ci
 cd ../server
 npm ci
 ```
+### Connecting To The Database
+By this point, you should have recieved an invitation email to the database.  
+If you haven't already, follow the link, make a new MongoDB account, and navigate to the overview page for MedMatch (may have to navigate through projects).   
+A banner should appear at the top saying that your IP address is not added to the whitelist. Click the button to add your IP address.  
+The tech lead should make a database user for you and provide you with a username and password. These will be necessary for the next section.  
 ### Setting Up Environment Variables
-You will need to create a `.env` file in the `/server` directory.
-Note: The file name should be ".env" verbatim, no file ending.
+You will need to create a `.env` file in the `/server` directory.  
+*Note: The file name should be ".env" verbatim, no file ending.*  
 Then copy paste the following into the newly created file.
 ```.env
-DB_USERNAME=[YOUR MONGODB ATLAS USERNAME]
-DB_PASSWORD=[YOUR MONGODB ATLAS PASSWORD]
+DB_USERNAME=[YOUR DATABASE USERNAME]
+DB_PASSWORD=[YOUR DATABASE PASSWORD]
 DB_HOST=radish.5ujpyx5.mongodb.net
 DB_COLLECTION=medmatch
 DB_CLUSTER=radish
 DEV_PORT=4000
 NODE_ENV=development
 ```
-You'll have to ask the tech lead for some of the variables.
+Make sure to replace the bracketed values with the corresponding data.
 ### Starting The Development Server
 In order to start the frontend development server, run the following command from the `client` directory.
 ```
