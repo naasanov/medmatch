@@ -21,8 +21,19 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+function connectionString() {
+  const dialect = "mongodb+srv";
+  const username = process.env.DB_USERNAME;
+  const password = process.env.DB_PASSWORD;
+  const host = process.env.DB_HOST;
+  const collection = process.env.DB_COLLECTION;
+  const cluster = process.env.DB_CLUSTER;
+
+  return `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster};`
+}
+
 // Database connection
-mongoose.connect(process.env.DB_URI!);
+mongoose.connect(connectionString());
 const db = mongoose.connection;
 
 db.on("connected", () => {
