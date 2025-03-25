@@ -22,7 +22,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   profile: { type: profileSchema, default: () => ({}) },
   isEmployer: { type: Boolean, required: true },
-  entryDate: { type: Date, required: true, default: () => Date.now() },
+  entryDate: { type: Date, default: () => Date.now() },
 });
 
 interface Profile extends InferSchemaType<typeof profileSchema> {}

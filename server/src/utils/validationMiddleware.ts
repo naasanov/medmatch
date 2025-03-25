@@ -118,7 +118,7 @@ function addErrors(
  */
 function endValidation(req: Request, res: Response, next: NextFunction): any {
   const errors = formattedValidationResult(req).array();
-  addErrors(res.locals.classValidatorErrors, errors);
+  addErrors(res.locals.classValidatorErrors ?? [], errors);
   if (errors.length > 0) {
     return res.status(400).json({
       status: "error",
