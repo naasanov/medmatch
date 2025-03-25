@@ -70,8 +70,8 @@ userRouter.post(
 );
 
 userRouter.delete(
-  "/:id/files/:fileId",
-  validation(validateId("id"), validateId("fileId")),
+  "/:userId/files/:fileId",
+  validation(validateId("userId"), validateId("fileId")),
   userController.removeFile
 );
 

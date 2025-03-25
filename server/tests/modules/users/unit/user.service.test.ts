@@ -15,7 +15,7 @@ import { expectMatch } from "#/utils/validation";
 import { ObjectId } from "mongodb";
 import { FileConflictError, FileNotFoundError } from "@/modules/files";
 
-describe("UserService", () => {
+describe("User Service", () => {
   let userService: UserService;
 
   beforeEach(() => {

@@ -10,6 +10,7 @@ import {
   ValidateNested,
   IsOptional,
   IsDefined,
+  IsISO8601,
 } from "class-validator";
 
 class ProfileValidator {
@@ -50,9 +51,9 @@ class UserValidator {
   @IsBoolean()
   isEmployer!: boolean;
 
-  @IsDate()
-  @IsNotEmpty()
-  entryDate!: Date;
+  @IsISO8601()
+  @IsOptional()
+  entryDate?: Date;
 
   @IsDefined()
   @ValidateNested()
