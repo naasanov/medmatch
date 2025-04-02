@@ -80,7 +80,7 @@ describe("User Router", () => {
       });
     });
 
-    it("should return a validation error for incorrect data types", async () => {
+    it("should return a validation error for incorrect data types in user", async () => {
       const invalidData = {
         first: 1,
         last: 2,
@@ -96,28 +96,24 @@ describe("User Router", () => {
       expect(response.headers["content-type"]).toBe(
         "application/json; charset=utf-8"
       );
+
       const errors: IValidationError[] = response.body.errors;
       expect(errors.length).toBe(6);
       expectMatch(response.body, ValidationErrorBodyValidator);
       expect(errors.every((e) => e.loc === "body")).toBeTruthy();
-      
+
       const errorFields = errors.map((e) => e.field);
       expect(Object.keys(invalidData).every((k) => errorFields.includes(k)));
     });
 
-    it("should return a validation error for invalid data", async () => {
-      const invalidData = {
-        first: "",
-        last: "",
-        email: "",
-        password: "",
-        isEmployer: true,
-        profile: {
-          bio: 1,
-          work: 2,
-          research: 3,
-          volunteering: 4,
-        },
+    it("should return a validation error for incorrect data types in profile", async () => {
+      const user: any = await defaultUserData();
+      const { profile, ...invalidData } = user;
+      invalidData.profile = {
+        bio: 1,
+        work: 2,
+        research: 3,
+        volunteering: 4,
       };
 
       const response = await request(app).post("/api/users").send(invalidData);
@@ -126,8 +122,36 @@ describe("User Router", () => {
       expect(response.headers["content-type"]).toBe(
         "application/json; charset=utf-8"
       );
+
       const errors: IValidationError[] = response.body.errors;
-      expect(errors.length).toBe(9);
+      expect(errors.length).toBe(4);
+      expectMatch(response.body, ValidationErrorBodyValidator);
+      expect(errors.every((e) => e.loc === "body")).toBeTruthy();
+
+      const errorFields = errors.map((e) => e.field);
+      expect(
+        Object.keys(invalidData.profile).every((k) => errorFields.includes(k))
+      );
+    });
+
+    it("should return a validation error for empty strings in user", async () => {
+      const invalidData = {
+        first: "",
+        last: "",
+        email: "",
+        password: "",
+        isEmployer: true
+      };
+
+      const response = await request(app).post("/api/users").send(invalidData);
+
+      expect(response.status).toBe(400);
+      expect(response.headers["content-type"]).toBe(
+        "application/json; charset=utf-8"
+      );
+
+      const errors: IValidationError[] = response.body.errors;
+      expect(errors.length).toBe(5); // One for each empty string, and one extra for email not an email
       expectMatch(response.body, ValidationErrorBodyValidator);
       expect(errors.every((e) => e.loc === "body")).toBeTruthy();
 

@@ -14,7 +14,7 @@ import { IValidationError } from "@/types/errors";
 import { ClassType } from "@/types/validation";
 
 /**
- * Returns a request handler that validates the request body against a class defined with `class-validator`.  
+ * Returns a request handler that validates the request body against a class defined with `class-validator`.
  * Adds any found errors to the `res.locals.classValidatorErrors` array.
  * @param classType The class to validate the request body against
  * @param isPartial Whether the validator should skip missing properties
@@ -27,7 +27,9 @@ function validateObjectByClass<T extends object>(
 ): RequestHandler {
   return async (
     req: Request,
-    res: Response & { locals: { classValidatorErrors?: ClassValidationError[] } },
+    res: Response & {
+      locals: { classValidatorErrors?: ClassValidationError[] };
+    },
     next: NextFunction
   ): Promise<any> => {
     const instance = plainToInstance(classType, req[field]);
@@ -35,10 +37,10 @@ function validateObjectByClass<T extends object>(
       skipMissingProperties: isPartial,
     });
     if (result.length > 0) {
-      const errors = res.locals.classValidatorErrors
-      res.locals.classValidatorErrors = errors ? errors.concat(result) : result
+      const errors = res.locals.classValidatorErrors;
+      res.locals.classValidatorErrors = errors ? errors.concat(result) : result;
     }
-    req[field] = instance // Remove extra fields
+    req[field] = instance; // Remove extra fields
     next();
   };
 }
@@ -92,24 +94,28 @@ const formattedValidationResult = validationResult.withDefaults({
 });
 
 /**
- * Helper function that formats an array of `class-validator` errors and adds it to an array of `IValidationErrors`.
- * @param newErrors List of errors returned by a `class-validator` validation
- * @param errors Result of calling `formattedValidationResult` that the errors should be added to.
+ * Formats the class validation errors to the custom `IValidationError` type.
  */
-function addErrors(
-  newErrors: ClassValidationError[],
-  errors: IValidationError[]
-): void {
-  for (const error of newErrors) {
-    for (const msg of Object.values(error.constraints ?? {})) {
-      errors.push({
-        type: "validation",
-        loc: "body",
-        field: error.property,
-        details: msg,
-      });
-    }
-  }
+function formatClassErrors(
+  classErrors: ClassValidationError[],
+): IValidationError[] {
+  // use flatMap to handle nested errors
+  return classErrors.flatMap((error) =>
+      // If there are no children, add the error
+      error.children === undefined || error.children.length === 0
+        // Map the constraints to a list of validation errors
+        ? Object.values(error.constraints ?? {}).map(
+            (msg) =>
+              ({
+                type: "validation",
+                loc: "body",
+                field: error.property,
+                details: msg,
+              } as IValidationError)
+          )
+        // If there are children, recursively add the children
+        : formatClassErrors(error.children)
+    )
 }
 
 /**
@@ -117,8 +123,10 @@ function addErrors(
  * If there are, it sends a response with status 400 and the errors.
  */
 function endValidation(req: Request, res: Response, next: NextFunction): any {
-  const errors = formattedValidationResult(req).array();
-  addErrors(res.locals.classValidatorErrors ?? [], errors);
+  const expressValidatorErrors = formattedValidationResult(req).array();
+  const classValidatorErrors = formatClassErrors(res.locals.classValidatorErrors ?? [])
+  console.log("class errors: ", res.locals.classValidatorErrors)
+  const errors = [...expressValidatorErrors, ...classValidatorErrors];
   if (errors.length > 0) {
     return res.status(400).json({
       status: "error",
