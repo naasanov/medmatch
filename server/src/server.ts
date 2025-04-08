@@ -16,13 +16,13 @@ app.use(express.urlencoded({ extended: false }));
 
 const corsOptions = {
   origin: "*",
-  credentails: true,
-  optionSuccessStatus: 200,
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
 // Database connection
-function connectionString() {
+async function connectDB() {
   const dialect = "mongodb+srv";
   const username = process.env.DB_USERNAME;
   const password = process.env.DB_PASSWORD;
@@ -30,18 +30,14 @@ function connectionString() {
   const collection = process.env.DB_COLLECTION;
   const cluster = process.env.DB_CLUSTER;
 
-  return `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster};`
+  const uri = `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster}`;
+  
+  await mongoose.connect(uri);
+  console.log("[database]: Connected");
 }
 
-mongoose.connect(connectionString());
-const db = mongoose.connection;
-
-db.on("connected", () => {
-  console.log("[database]: Connected");
-});
-
-db.on("error", (e) => {
-  console.log("[database]: Connection error:", e);
+mongoose.connection.on("error", (e) => {
+  console.error("[database]: Connection error:", e);
 });
 
 // Routes
@@ -55,4 +51,4 @@ app.use("/api/users", userRouter);
 // Error handler must come last
 app.use(errorHandler);
 
-export { app }
+export { app, connectDB };

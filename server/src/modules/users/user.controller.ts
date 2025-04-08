@@ -8,7 +8,15 @@ class UserController {
   constructor(
     private userService: UserService,
     private fileService: FileService
-  ) {}
+  ) {
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.getUserById = this.getUserById.bind(this);
+    this.createUser = this.createUser.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.addFile = this.addFile.bind(this);
+    this.removeFile = this.removeFile.bind(this);
+  }
 
   @HandleErrors()
   async login(req: Request, res: Response): Promise<void> {

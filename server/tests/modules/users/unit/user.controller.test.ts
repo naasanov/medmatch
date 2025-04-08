@@ -11,7 +11,7 @@ import { createMockRequest, createMockResponse } from "#/utils/express.mocks";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 
-describe("UserController", () => {
+describe("User Controller", () => {
   let userService: jest.Mocked<UserService>;
   let fileService: jest.Mocked<FileService>;
   let userController: UserController;

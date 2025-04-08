@@ -16,6 +16,7 @@ interface IValidationError extends IApiError {
   type: "validation";
   loc: Location | "other";
   field: string;
+  details: string;
 }
 
 class HttpError extends Error implements IHttpError {
