@@ -3,16 +3,29 @@ import {
   UserNotFoundError,
   UserConflictError,
   User,
-  Profile,
   UserDoc,
   PopulatedProfile,
   PopulatedUser,
+  hashPassword,
+  comparePassword,
 } from "@/modules/users";
 import { MongoError, ObjectId } from "mongodb";
 import { FileConflictError, FileNotFoundError } from "@/modules/files";
 
 class UserService {
   constructor(private users: Model<User>) {}
+
+  async login(email: string, password: string): Promise<PopulatedUser | null> {
+    const user = await this.users
+      .findOne<PopulatedUser>({ email })
+      .populate<{ profile: PopulatedProfile }>("profile.files")
+      .exec();
+    if (!user) {
+      return null;
+    }
+    const isPasswordValid = await comparePassword(password, user.password);
+    return isPasswordValid ? user : null;
+  }
 
   async getAllUsers(): Promise<PopulatedUser[]> {
     return this.users
@@ -34,6 +47,7 @@ class UserService {
 
   async createUser(userData: User): Promise<PopulatedUser> {
     try {
+      userData.password = await hashPassword(userData.password);
       const user = new this.users(userData);
       await user.save();
       return user.populate<{ profile: PopulatedProfile }>("profile.files");
@@ -52,6 +66,9 @@ class UserService {
     userData: Partial<User>
   ): Promise<PopulatedUser> {
     try {
+      if (userData.password !== undefined && userData.password !== null) {
+        userData.password = await hashPassword(userData.password);
+      }
       const user = await this.users
         .findByIdAndUpdate<UserDoc>(userId, userData, { new: true })
         .populate<{ profile: PopulatedProfile }>("profile.files")

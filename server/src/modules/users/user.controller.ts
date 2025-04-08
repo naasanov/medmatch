@@ -2,12 +2,38 @@ import { UserService, User } from "@/modules/users";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
+import { UserCode } from "@/types/errorCodes";
 
 class UserController {
   constructor(
     private userService: UserService,
     private fileService: FileService
   ) {}
+
+  @HandleErrors()
+  async login(req: Request, res: Response): Promise<void> {
+    const { email, password } = req.body;
+    console.log("running login with: ", email, password);
+    const user = await this.userService.login(email, password);
+    if (!user) {
+      res.status(401).json({
+        status: "error",
+        errors: [
+          {
+            type: "http",
+            details: "Invalid email or password",
+            code: UserCode.InvalidCredentials,
+          },
+        ],
+      });
+      return;
+    }
+    res.status(200).json({
+      status: "success",
+      data: user,
+      message: `User with id ${user._id} logged in successfully`,
+    });
+  }
 
   @HandleErrors()
   async getAllUsers(req: Request, res: Response): Promise<void> {

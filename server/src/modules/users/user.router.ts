@@ -4,6 +4,7 @@ import {
   UserController,
   UserValidator,
   UserModel,
+  CredentialsValidator,
 } from "@/modules/users";
 import { FileModel, FileService, FileValidator } from "@/modules/files";
 import {
@@ -21,6 +22,12 @@ const userService = new UserService(UserModel);
 const fileService = new FileService(FileModel);
 const userController = new UserController(userService, fileService);
 const upload = multer();
+
+userRouter.post(
+  "/auth/login",
+  validation(validateBody(CredentialsValidator)),
+  userController.login
+)
 
 userRouter.get("/", userController.getAllUsers);
 

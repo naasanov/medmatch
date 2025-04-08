@@ -21,6 +21,7 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
       ],
     });
   } else {
+    console.log("res: ", JSON.stringify(res))
     return res.status(500).json({
       status: "error",
       errors: [
