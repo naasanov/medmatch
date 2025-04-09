@@ -57,7 +57,7 @@ The API is built on a multi-layer architecture. An overview of each layer and it
 
 There are two other structures that contribute to the request flow of the API.
 ### Input Validation
-All input validation is done through middleware, effectively creating a barrier to entry for the API layers. If any input validation errors are encountered through the proccess, they are automatically converted to an HTTP response and sent back to the client before the request reaches the controller.  
+All input validation is done through middleware, effectively creating a barrier to entry for the API layers. If any input validation errors are encountered through the process, they are automatically converted to an HTTP response and sent back to the client before the request reaches the controller.  
 ### Error Handling
 If any errors occur within the controller logic, such as an absent document or an id conflict, a custom error is thrown, passed to the error handler, converted to an HTTP response, and sent to the client. This allows the controller to delegate most of the error logic to the error handler, with the HTTP configuration defined within the custom error class. This also keeps any HTTP logic out of the service layer, maintaining the desired amount of decoupling.
 ### Overview
