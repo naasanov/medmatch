@@ -54,6 +54,7 @@ export default {
   		},
   		fontFamily: {
   			sans: [
+					'var(--font-inter)',
   				'var(--font-nunito-sans)',
   				'sans-serif'
   			],

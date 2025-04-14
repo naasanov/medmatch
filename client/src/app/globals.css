@@ -4,6 +4,7 @@
 
 :root {
   --font-nunito-sans: var(--font-nunito-sans), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -14,7 +15,7 @@
 } */
 
 body {
-  font-family: var(--font-nunito-sans), Helvetica, sans-serif;
+  font-family: var(--font-inter), Helvetica, sans-serif;
 }
 
 * {
@@ -27,7 +28,7 @@ body {
   :root {
     /* --background: 0 0% 100%; */
     --background: oklch(94.61% 0 0);
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 222.2 84% 4.9%; 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;

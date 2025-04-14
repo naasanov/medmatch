@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="flex justify-center mx-40">
       <section className="flex flex-col my-28 max-w-lg">
-        <header className="text-6xl font-bold text-accentDarkBlue font-arial">
+        <header className="text-6xl font-bold text-accentDarkBlue font-sans">
           Welcome to MedMatch
         </header>
         <p className="text-xl font-semibold my-5">
