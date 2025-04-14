@@ -28,10 +28,34 @@ const handler = NextAuth({
         if (!user) {
           return null;
         }
-        return { ...user, id: user._id }
-      }
+        // The authorize function needs a user object with an `id` field,
+        // so just set that equal to _id for simplicity
+        return { ...user, id: user._id };
+      },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
+  // Expose the JWT access token
+  callbacks: {
+    async jwt({ token, account, user }) {
+      // If credentials were used
+      if (user) {
+        token.accessToken = user.accessToken;
+      }
+      // If OAuth was used
+      else if (account) {
+        token.accessToken = account.access_token
+      }
+      return token
+    },
+    async session({ session, token }) {
+      session.accessToken = token.accessToken
+      return session
+    }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };

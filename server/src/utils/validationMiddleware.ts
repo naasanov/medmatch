@@ -125,7 +125,6 @@ function formatClassErrors(
 function endValidation(req: Request, res: Response, next: NextFunction): any {
   const expressValidatorErrors = formattedValidationResult(req).array();
   const classValidatorErrors = formatClassErrors(res.locals.classValidatorErrors ?? [])
-  console.log("class errors: ", res.locals.classValidatorErrors)
   const errors = [...expressValidatorErrors, ...classValidatorErrors];
   if (errors.length > 0) {
     return res.status(400).json({

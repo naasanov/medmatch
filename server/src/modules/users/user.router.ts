@@ -16,6 +16,7 @@ import {
 } from "@/utils/validationMiddleware";
 import multer from "multer";
 import { body } from "express-validator";
+import { authenticate } from "@/utils/authentication";
 
 const userRouter = Router();
 const userService = new UserService(UserModel);
@@ -28,6 +29,8 @@ userRouter.post(
   validation(validateBody(CredentialsValidator)),
   userController.login
 )
+
+userRouter.use(authenticate)
 
 userRouter.get("/", userController.getAllUsers);
 

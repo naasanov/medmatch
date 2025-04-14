@@ -3,12 +3,14 @@ import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
 import { UserCode } from "@/types/errorCodes";
+import jwt from "jsonwebtoken";
 
 class UserController {
   constructor(
     private userService: UserService,
     private fileService: FileService
   ) {
+    this.login = this.login.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
     this.getUserById = this.getUserById.bind(this);
     this.createUser = this.createUser.bind(this);
@@ -21,7 +23,6 @@ class UserController {
   @HandleErrors()
   async login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
-    console.log("running login with: ", email, password);
     const user = await this.userService.login(email, password);
     if (!user) {
       res.status(401).json({
@@ -36,9 +37,16 @@ class UserController {
       });
       return;
     }
+
+    const accessToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.NEXTAUTH_SECRET!,
+      { expiresIn: "1h" }
+    );
+
     res.status(200).json({
       status: "success",
-      data: user,
+      data: { accessToken, ...user },
       message: `User with id ${user._id} logged in successfully`,
     });
   }

@@ -7,6 +7,7 @@ interface File {
 
 interface User {
   _id: string;
+  accessToken?: string;
   first: string;
   last: string;
   email: string;

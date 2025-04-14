@@ -9,6 +9,11 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
     console.error(err);
   }
 
+  if (res === undefined) {
+    console.error("Response object is undefined in errorHandler");
+    return;
+  }
+
   if (err instanceof HttpError) {
     return res.status(err.status).json({
       status: "error",
@@ -21,7 +26,6 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
       ],
     });
   } else {
-    console.log("res: ", JSON.stringify(res))
     return res.status(500).json({
       status: "error",
       errors: [
