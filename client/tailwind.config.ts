@@ -50,7 +50,31 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			// custom colors
+			primaryPurple: 'hsl(var(--primary-purple))',
+			primaryBlue: 'hsl(var(--primary-blue))',
+			secondaryBlue: 'hsl(var(--secondary-blue))',
+			backgroundWhite: 'hsl(var(--background-white))',
+			primaryPurpleG1: 'hsl(var(--primary-purple-g1))',
+			primaryPurpleG2: 'hsl(var(--primary-purple-g2))',
+			primaryPurpleG3: 'hsl(var(--primary-purple-g3))',
+			primaryBlueG1: 'hsl(var(--primary-blue-g1))',
+			primaryBlueG2: 'hsl(var(--primary-blue-g2))',
+			primaryBlueG3: 'hsl(var(--primary-blue-g3))',
+			secondaryBlueG1: 'hsl(var(--secondary-blue-g1))',
+			secondaryBlueG2: 'hsl(var(--secondary-blue-g2))',
+			secondaryBlueG3: 'hsl(var(--secondary-blue-g3))',
+			titlePB: 'hsl(var(--title-pb))',
+			basicTitle: 'hsl(var(--basic-title))',
+			bodyText: 'hsl(var(--body-text))',
+			shadowsOutlines: 'hsl(var(--shadows-outlines))',
+			titlePBHover: 'hsl(var(--title-pb-hover))',
+			basicTitleHover: 'hsl(var(--basic-title-hover))',
+			bodyTextHover: 'hsl(var(--body-text-hover))',
+			shadowsOutlinesHover: 'hsl(var(--shadows-outlines-hover))',
+			primaryPurpleHover: 'hsl(var(--primary-purple-hover))',
+
   		},
   		fontFamily: {
   			sans: [

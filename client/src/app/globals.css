@@ -54,7 +54,28 @@ body {
     --radius: 0.5rem;
 
     /*custom color variables*/
-    
+    --primary-purple: 249, 95%, 67%;
+    --primary-blue: 223, 89%, 40%;
+    --secondary-blue: 211, 80%, 54%;
+    --background-white: 240, 100%, 98%;
+    --primary-purple-g1: 250, 94%, 73%;
+    --primary-purple-g2: 249, 94%, 80%;
+    --primary-purple-g3: 250, 92%, 90%;
+    --primary-blue-g1: 223, 59%, 52%;
+    --primary-blue-g2: 223, 59%, 64%;
+    --primary-blue-g3: 223, 59%, 76%;
+    --secondary-blue-g1: 211, 79%, 63%;
+    --secondary-blue-g2: 211, 79%, 72%;
+    --secondary-blue-g3: 212, 79%, 81%;
+    --title-pb: 223, 89%, 40%;
+    --basic-title: 227, 42%, 17%;
+    --body-text: 226, 13%, 44%;
+    --shadows-outlines: 240, 12%, 88%;
+    --title-pb-hover: 223, 90%, 24%;
+    --basic-title-hover: 229, 41%, 10%;
+    --body-text-hover: 226, 13%, 31%;
+    --shadows-outlines-hover: 240, 4%, 71%;
+    --primary-purple-hover: 250, 48%, 46%;
   }
   .dark {
     --background: 222.2 84% 4.9%;
