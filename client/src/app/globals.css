@@ -26,22 +26,22 @@ body {
 
 @layer base {
   :root {
-    /* --background: 0 0% 100%; */
-    --background: oklch(94.61% 0 0);
-    --foreground: 222.2 84% 4.9%; 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: oklch(94.61% 0 0);
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    /* --background: 240, 100%, 98% */
+    --background: 240, 100%, 98%; 
+    --foreground: 226, 13%, 44%; 
+    --card: 240, 100%, 98%; 
+    --card-foreground: 226, 13%, 44%; 
+    --popover: 240, 100%, 98%; 
+    --popover-foreground: 226, 13%, 44%; 
+    --primary: 249, 95%, 67%; /*primary purple*/
+    --primary-foreground: 240, 100%, 98%;
+    --secondary: 223, 89%, 40%; /*primary blue*/
+    --secondary-foreground: 240, 100%, 98%;
+    --muted: 210 40% 96.1%; /*no equivalent*/
+    --muted-foreground: 215.4 16.3% 46.9%; /*no equivalent*/
+    --accent: 211, 80%, 54%; /*secondary blue*/
+    --accent-foreground: 240, 100%, 98%;
+    --destructive: 0 84.2% 60.2%; /*no equivalent here until --primary-purple*/
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -52,6 +52,9 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /*custom color variables*/
+    
   }
   .dark {
     --background: 222.2 84% 4.9%;
