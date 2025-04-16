@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
 export default {
     darkMode: ["class"],
@@ -10,9 +11,11 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
+  			background: {
+				DEFAULT: 'hsl(var(--background))',
+				white: 'hsl(var(--background-white))',
+			},
   			foreground: 'hsl(var(--foreground))',
-  			accentDarkBlue: '#001c88',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -23,11 +26,35 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+				
+				//custom colors
+				purple: {
+					DEFAULT: 'hsl(var(--primary-purple))',
+					hover: 'hsl(var(--primary-purple-hover))',
+					500: 'hsl(var(--primary-purple))',
+					400: 'hsl(var(--primary-purple-g1))',
+					300: 'hsl(var(--primary-purple-g2))',
+					200: 'hsl(var(--primary-purple-g3))',
+				},
+				blue: {
+					DEFAULT: 'hsl(var(--primary-blue))',
+					500: 'hsl(var(--primary-blue))',
+					400: 'hsl(var(--primary-blue-g1))',
+					300: 'hsl(var(--primary-blue-g2))',
+					200: 'hsl(var(--primary-blue-g3))',
+				},
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				foreground: 'hsl(var(--secondary-foreground))',
+				blue: {
+					DEFAULT: 'hsl(var(--secondary-blue))',
+					500: 'hsl(var(--secondary-blue))',
+					400: 'hsl(var(--secondary-blue-g1))',
+					300: 'hsl(var(--secondary-blue-g2))',
+					200: 'hsl(var(--secondary-blue-g3))',
+				},
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -50,10 +77,34 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+
+			// custom colors
+			title: {
+				pb: {
+					DEFAULT: 'hsl(var(--title-pb))',
+					hover: 'hsl(var(--title-pb-hover))',
+				},
+				basic: {
+					DEFAULT: 'hsl(var(--basic-title))',
+					hover: 'hsl(var(--basic-title-hover))',
+				},
+			},
+
+			body: {
+				text: {
+					DEFAULT: 'hsl(var(--body-text))',
+					hover: 'hsl(var(--body-text-hover))',
+				},
+			},
+			shadowsOutlines: {
+				DEFAULT: 'hsl(var(--shadows-outlines))',
+				hover: 'hsl(var(--shadows-outlines-hover))',
+			},
   		},
   		fontFamily: {
   			sans: [
+					'var(--font-inter)',
   				'var(--font-nunito-sans)',
   				'sans-serif'
   			],
@@ -69,5 +120,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindAnimate],
 } satisfies Config;
