@@ -10,9 +10,12 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
+  			background: {
+				DEFAULT: 'hsl(var(--background))',
+				white: 'hsl(var(--background-white))',
+			},
   			foreground: 'hsl(var(--foreground))',
-  			accentDarkBlue: '#001c88',
+  			accentDarkBlue: '#001c88', //confused on what this is for
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -23,11 +26,35 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+				
+				//custom colors
+				purple: {
+					DEFAULT: 'hsl(var(--primary-purple))',
+					hover: 'hsl(var(--primary-purple-hover))',
+					500: 'hsl(var(--primary-purple))',
+					400: 'hsl(var(--primary-purple-g1))',
+					300: 'hsl(var(--primary-purple-g2))',
+					200: 'hsl(var(--primary-purple-g3))',
+				},
+				blue: {
+					DEFAULT: 'hsl(var(--primary-blue))',
+					500: 'hsl(var(--primary-blue))',
+					400: 'hsl(var(--primary-blue-g1))',
+					300: 'hsl(var(--primary-blue-g2))',
+					200: 'hsl(var(--primary-blue-g3))',
+				},
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				foreground: 'hsl(var(--secondary-foreground))',
+				blue: {
+					DEFAULT: 'hsl(var(--secondary-blue))',
+					500: 'hsl(var(--secondary-blue))',
+					400: 'hsl(var(--secondary-blue-g1))',
+					300: 'hsl(var(--secondary-blue-g2))',
+					200: 'hsl(var(--secondary-blue-g3))',
+				},
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -51,30 +78,29 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-			// custom colors
-			primaryPurple: 'hsl(var(--primary-purple))',
-			primaryBlue: 'hsl(var(--primary-blue))',
-			secondaryBlue: 'hsl(var(--secondary-blue))',
-			backgroundWhite: 'hsl(var(--background-white))',
-			primaryPurpleG1: 'hsl(var(--primary-purple-g1))',
-			primaryPurpleG2: 'hsl(var(--primary-purple-g2))',
-			primaryPurpleG3: 'hsl(var(--primary-purple-g3))',
-			primaryBlueG1: 'hsl(var(--primary-blue-g1))',
-			primaryBlueG2: 'hsl(var(--primary-blue-g2))',
-			primaryBlueG3: 'hsl(var(--primary-blue-g3))',
-			secondaryBlueG1: 'hsl(var(--secondary-blue-g1))',
-			secondaryBlueG2: 'hsl(var(--secondary-blue-g2))',
-			secondaryBlueG3: 'hsl(var(--secondary-blue-g3))',
-			titlePB: 'hsl(var(--title-pb))',
-			basicTitle: 'hsl(var(--basic-title))',
-			bodyText: 'hsl(var(--body-text))',
-			shadowsOutlines: 'hsl(var(--shadows-outlines))',
-			titlePBHover: 'hsl(var(--title-pb-hover))',
-			basicTitleHover: 'hsl(var(--basic-title-hover))',
-			bodyTextHover: 'hsl(var(--body-text-hover))',
-			shadowsOutlinesHover: 'hsl(var(--shadows-outlines-hover))',
-			primaryPurpleHover: 'hsl(var(--primary-purple-hover))',
 
+			// custom colors
+			title: {
+				pb: {
+					DEFAULT: 'hsl(var(--title-pb))',
+					hover: 'hsl(var(--title-pb-hover))',
+				},
+				basic: {
+					DEFAULT: 'hsl(var(--basic-title))',
+					hover: 'hsl(var(--basic-title-hover))',
+				},
+			},
+
+			body: {
+				text: {
+					DEFAULT: 'hsl(var(--body-text))',
+					hover: 'hsl(var(--body-text-hover))',
+				},
+			},
+			shadowsOutlines: {
+				DEFAULT: 'hsl(var(--shadows-outlines))',
+				hover: 'hsl(var(--shadows-outlines-hover))',
+			},
   		},
   		fontFamily: {
   			sans: [
