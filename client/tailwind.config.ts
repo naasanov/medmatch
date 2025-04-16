@@ -15,7 +15,6 @@ export default {
 				white: 'hsl(var(--background-white))',
 			},
   			foreground: 'hsl(var(--foreground))',
-  			accentDarkBlue: '#001c88', //confused on what this is for
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
