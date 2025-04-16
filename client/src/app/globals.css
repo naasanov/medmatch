@@ -27,21 +27,21 @@ body {
 @layer base {
   :root {
     /* --background: 240, 100%, 98% */
-    --background: 240, 100%, 98%; 
-    --foreground: 226, 13%, 44%; 
-    --card: 240, 100%, 98%; 
-    --card-foreground: 226, 13%, 44%; 
-    --popover: 240, 100%, 98%; 
-    --popover-foreground: 226, 13%, 44%; 
-    --primary: 249, 95%, 67%; /*primary purple*/
-    --primary-foreground: 240, 100%, 98%;
-    --secondary: 223, 89%, 40%; /*primary blue*/
-    --secondary-foreground: 240, 100%, 98%;
+    --background: var(--background-white); 
+    --foreground: var(--body-text); 
+    --card: var(--background-white); 
+    --card-foreground: var(--body-text); 
+    --popover: var(--background-white); 
+    --popover-foreground: var(--body-text); 
+    --primary: var(--primary-purple); 
+    --primary-foreground: var(--background-white);
+    --secondary: var(--primary-blue); 
+    --secondary-foreground: var(--background-white);
     --muted: 210 40% 96.1%; /*no equivalent*/
     --muted-foreground: 215.4 16.3% 46.9%; /*no equivalent*/
-    --accent: 211, 80%, 54%; /*secondary blue*/
-    --accent-foreground: 240, 100%, 98%;
-    --destructive: 0 84.2% 60.2%; /*no equivalent here until --primary-purple*/
+    --accent: var(--secondary-blue); 
+    --accent-foreground: var(--background-white);
+    --destructive: 0 84.2% 60.2%; /*no equivalent here until custom colors*/
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
