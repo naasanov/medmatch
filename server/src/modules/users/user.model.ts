@@ -131,9 +131,11 @@ const UserModel = mongoose.model<UserSchema, UserModelType>(
 );
 
 export {
+  ProfileSchema,
   UnpopulatedProfileDoc,
   ProfileDoc,
   Profile,
+  UserSchema,
   UnpopulatedUserDoc,
   UserDoc,
   User,
