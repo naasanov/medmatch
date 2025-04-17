@@ -20,7 +20,7 @@ node_modules/
 /client/build
 
 # misc
-.DS_Store
+**/.DS_Store
 /client/*.pem
 
 # debug
