@@ -37,7 +37,7 @@ class FileController {
     const file = await this.fileService.createFile(fileData as File);
     res.status(201).json({
       success: true,
-      message: `File with id ${file._id} created successfully`,
+      message: `File with id ${file.id} created successfully`,
       data: file,
     });
   }

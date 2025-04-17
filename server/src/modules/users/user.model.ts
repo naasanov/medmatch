@@ -1,11 +1,11 @@
-import { ModelWithOverrides, Replace, ID } from "@/types/mongoose";
+import { ModelWithOverrides, Replace } from "@/types/mongoose";
 import mongoose, {
   Schema,
   HydratedDocument,
   InferSchemaType,
   HydratedSingleSubdocument,
 } from "mongoose";
-import { File } from "@/modules/files";
+import { File, FileDoc } from "@/modules/files";
 
 const profileSchema = new Schema({
   bio: { type: String },
@@ -25,31 +25,84 @@ const userSchema = new Schema({
   entryDate: { type: Date, required: true, default: () => Date.now() },
 });
 
-interface Profile extends InferSchemaType<typeof profileSchema> {}
-interface ProfileDoc extends HydratedSingleSubdocument<Profile> {}
-type PopulatedProfile = Replace<Profile & ID, { files: (File & ID)[] }>;
+type ProfileSchema = InferSchemaType<typeof profileSchema>;
+type InputProfile = Replace<ProfileSchema, { files: string[] }>;
 
-interface User extends InferSchemaType<typeof userSchema> {
-  profile: Profile;
-}
-interface UserDoc extends HydratedDocument<User> {
-  profile: ProfileDoc;
-}
-type PopulatedUser = Replace<User & ID, { profile: PopulatedProfile }>;
+type UnpopulatedProfileDoc = HydratedSingleSubdocument<ProfileSchema>;
+type ProfileDoc = Replace<UnpopulatedProfileDoc, { files: FileDoc[] }>;
 
-type UserModelType = ModelWithOverrides<User, UserDoc>;
-const UserModel = mongoose.model<User, UserModelType>(
+class Profile implements Replace<ProfileSchema, { files: File[] }> {
+  constructor(
+    public id: string,
+    public files: File[],
+    public bio?: string | null,
+    public work?: string | null,
+    public research?: string | null,
+    public volunteering?: string | null
+  ) {}
+
+  static fromDoc(doc: ProfileDoc): Profile {
+    return new Profile(
+      doc._id.toString(),
+      doc.files.map((file) => File.fromDoc(file)),
+      doc.bio,
+      doc.work,
+      doc.research,
+      doc.volunteering
+    );
+  }
+}
+
+type UserSchema = InferSchemaType<typeof userSchema>;
+type InputUser = Replace<UserSchema, { profile: InputProfile }>;
+
+type UnpopulatedUserDoc = HydratedDocument<UserSchema>;
+type UserDoc = Replace<UnpopulatedUserDoc, { profile: ProfileDoc }>;
+
+class User implements Replace<UserSchema, { profile: Profile }> {
+  constructor(
+    public id: string,
+    public first: string,
+    public last: string,
+    public email: string,
+    public password: string,
+    public profile: Profile,
+    public isEmployer: boolean,
+    public entryDate: Date
+  ) {}
+
+  static fromDoc(doc: UserDoc): User {
+    return new User(
+      doc._id.toString(),
+      doc.first,
+      doc.last,
+      doc.email,
+      doc.password,
+      Profile.fromDoc(doc.profile),
+      doc.isEmployer,
+      doc.entryDate
+    );
+  }
+}
+
+type UserModelType = ModelWithOverrides<UnpopulatedUserDoc, UserDoc>;
+const UserModel = mongoose.model<UserSchema, UserModelType>(
   "User",
   userSchema,
   "users"
 );
 
 export {
-  UserModel,
-  Profile,
+  ProfileSchema,
+  UnpopulatedProfileDoc,
   ProfileDoc,
-  User,
+  Profile,
+  UserSchema,
+  UnpopulatedUserDoc,
   UserDoc,
-  PopulatedProfile,
-  PopulatedUser,
+  User,
+  UserModel,
+  UserModelType,
+  InputUser,
+  InputProfile,
 };
