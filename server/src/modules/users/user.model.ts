@@ -7,6 +7,7 @@ import mongoose, {
 } from "mongoose";
 import { File, FileDoc } from "@/modules/files";
 
+/** Mongoose schema definition for user profile */
 const profileSchema = new Schema({
   bio: { type: String },
   work: { type: String },
@@ -15,10 +16,12 @@ const profileSchema = new Schema({
   files: { type: [Schema.Types.ObjectId], ref: "File", default: [] },
 });
 
+/** Mongoose schema definition for user */
 const userSchema = new Schema({
   first: { type: String, required: true },
   last: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true }, // lowercase email to ensure case insensitive uniqueness
+  // lowercase email to ensure case insensitive uniqueness
+  email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true },
   profile: { type: profileSchema, default: () => ({}) },
   isEmployer: { type: Boolean, required: true },
@@ -26,11 +29,29 @@ const userSchema = new Schema({
 });
 
 type ProfileSchema = InferSchemaType<typeof profileSchema>;
-type InputProfile = Replace<ProfileSchema, { files: string[] }>;
 
-type UnpopulatedProfileDoc = HydratedSingleSubdocument<ProfileSchema>;
+/**
+ * An input object used when creating a profile.
+ * Identical to {@link Profile} with no id, and an array of string
+ * ObjectIds instead of {@link File} objects.
+ */
+interface InputProfile extends Replace<ProfileSchema, { files: string[] }> {}
+
+/**
+ * A profile document with unpopulated `files` field returned by a mongoose query.
+ * @note This is a subdocument of the user document, and is not a full document.
+ */
+interface UnpopulatedProfileDoc
+  extends HydratedSingleSubdocument<ProfileSchema> {}
+
+/**
+ * The profile document with populated `files` field returned by a mongoose query
+ * followed by a `populate` call.
+ * @note This is a subdocument of the user document, and is not a full document.
+ */
 type ProfileDoc = Replace<UnpopulatedProfileDoc, { files: FileDoc[] }>;
 
+/** The base level populated profile object to be returned by the API. */
 class Profile implements Replace<ProfileSchema, { files: File[] }> {
   constructor(
     public id: string,
@@ -41,6 +62,9 @@ class Profile implements Replace<ProfileSchema, { files: File[] }> {
     public volunteering?: string | null
   ) {}
 
+  /**
+   * Converts a {@link ProfileDoc} to a {@link Profile} object.
+   */
   static fromDoc(doc: ProfileDoc): Profile {
     return new Profile(
       doc._id.toString(),
@@ -54,11 +78,24 @@ class Profile implements Replace<ProfileSchema, { files: File[] }> {
 }
 
 type UserSchema = InferSchemaType<typeof userSchema>;
-type InputUser = Replace<UserSchema, { profile: InputProfile }>;
 
-type UnpopulatedUserDoc = HydratedDocument<UserSchema>;
-type UserDoc = Replace<UnpopulatedUserDoc, { profile: ProfileDoc }>;
+/**
+ * An input object used when creating a user.
+ * There is no id for the user or profile, and the files are an array of string ObjectIds.
+ */
+interface InputUser extends Replace<UserSchema, { profile: InputProfile }> {}
 
+/** The user document with unpopulated `profile.files` field returned by a mongoose query. */
+interface UnpopulatedUserDoc extends HydratedDocument<UserSchema> {}
+
+/**
+ * The user document with populated `profile.files` field return by a mongoose query
+ * followed by a `populate` call
+ * */
+interface UserDoc
+  extends Replace<UnpopulatedUserDoc, { profile: ProfileDoc }> {}
+
+/** The base level populated user object to be returned by the API */
 class User implements Replace<UserSchema, { profile: Profile }> {
   constructor(
     public id: string,
@@ -71,6 +108,7 @@ class User implements Replace<UserSchema, { profile: Profile }> {
     public entryDate: Date
   ) {}
 
+  /** Converts a {@link UserDoc} to a {@link User} object */
   static fromDoc(doc: UserDoc): User {
     return new User(
       doc._id.toString(),
@@ -93,11 +131,9 @@ const UserModel = mongoose.model<UserSchema, UserModelType>(
 );
 
 export {
-  ProfileSchema,
   UnpopulatedProfileDoc,
   ProfileDoc,
   Profile,
-  UserSchema,
   UnpopulatedUserDoc,
   UserDoc,
   User,

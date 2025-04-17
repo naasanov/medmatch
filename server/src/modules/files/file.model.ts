@@ -12,8 +12,12 @@ const fileSchema = new Schema({
 
 type FileSchema = InferSchemaType<typeof fileSchema>;
 
+/** A file document returned by a mongoose query */
 interface FileDoc extends HydratedDocument<FileSchema> {}
 
+/**
+ * The base level populated file object to be returned by the API.
+ */
 class File implements FileSchema {
   constructor(
     public id: string,
