@@ -7,7 +7,7 @@ function Navbar() {
   const linkStyle = "text-[#668b6d] no-underline text-lg h-full flex";
 
   return (
-    <div className="bg-[#b1cdb6] flex justify-between items-center py-2 px-4 gap-8 mb-7">
+    <div className="bg-[#b1cdb6] flex justify-between items-center py-2 px-4 gap-8">
       <div className="flex items-center">
         <Link className="mr-20" href="/">
           <Image
