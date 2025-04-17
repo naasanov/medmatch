@@ -14,7 +14,6 @@ enum GeneralCode {
 enum UserCode {
   UserNotFound = 'USER_NOT_FOUND',
   UserConflict = 'USER_CONFLICT',
-  InvalidCredentials = 'INVALID_CREDENTIALS',
 }
 
 enum ProfileCode {

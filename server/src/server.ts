@@ -8,6 +8,7 @@ dotenv.config();
 import { fileRouter } from "@/modules/files";
 import { userRouter } from "@/modules/users";
 import { errorHandler } from "@/utils/errorHandler";
+import { authRouter } from "@/modules/auth";
 
 // Express configuration
 const app = express();
@@ -45,6 +46,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Connected");
 });
 
+app.use("/api/auth", authRouter);
 app.use("/api/files", fileRouter);
 app.use("/api/users", userRouter);
 

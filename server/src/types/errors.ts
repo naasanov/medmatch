@@ -51,10 +51,21 @@ class ConflictError extends HttpError {
   }
 }
 
+class UnauthorizedError extends HttpError {
+  constructor(
+    public details: string,
+    public code: ErrorCode = GeneralCode.Unauthorized,
+    public status: number = 401
+  ) {
+    super(details, code, status);
+  }
+}
+
 export {
   HttpError,
   NotFoundError,
   ConflictError,
+  UnauthorizedError,
   IApiError,
   IHttpError,
   IValidationError,

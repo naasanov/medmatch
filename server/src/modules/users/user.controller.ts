@@ -31,7 +31,7 @@ class UserController {
           {
             type: "http",
             details: "Invalid email or password",
-            code: UserCode.InvalidCredentials,
+            // code: UserCode.InvalidCredentials,
           },
         ],
       });

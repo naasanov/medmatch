@@ -45,6 +45,17 @@ class UserService {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<PopulatedUser> {
+    const user = await this.users
+      .findOne<PopulatedUser>({ email })
+      .populate<{ profile: PopulatedProfile }>("profile.files")
+      .exec();
+    if (!user) {
+      throw new UserNotFoundError(`User with email ${email} not found`);
+    }
+    return user;
+  }
+
   async createUser(userData: User): Promise<PopulatedUser> {
     try {
       userData.password = await hashPassword(userData.password);

@@ -1,12 +1,13 @@
-import { Request, Response, RequestHandler, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { HttpError } from "@/types/errors";
 import { GeneralCode } from "@/types/errorCodes";
 import dotenv from "dotenv";
+import { IncomingMessage } from "http";
 dotenv.config();
 
-const errorHandler = (err: any, req: Request, res: Response): any => {
+const errorHandler = (error: any, req: Request, res: Response, next: NextFunction): any => {
   if (process.env.NODE_ENV === "development") {
-    console.error(err);
+    console.error(error);
   }
 
   if (res === undefined) {
@@ -14,14 +15,14 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
     return;
   }
 
-  if (err instanceof HttpError) {
-    return res.status(err.status).json({
+  if (error instanceof HttpError) {
+    return res.status(error.status).json({
       status: "error",
       errors: [
         {
-          type: err.type,
-          details: err.message,
-          code: err.code,
+          type: error.type,
+          details: error.message,
+          code: error.code,
         },
       ],
     });
@@ -65,7 +66,7 @@ function HandleErrors() {
       try {
         await originalMethod.apply(this, [req, res, next]);
       } catch (error) {
-        console.log(error)
+        console.log("error type", error instanceof IncomingMessage)
         next(error);
       }
     };
