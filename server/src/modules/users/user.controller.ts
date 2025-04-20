@@ -1,4 +1,4 @@
-import { UserService, User } from "@/modules/users";
+import { UserService, InputUser } from "@/modules/users";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
@@ -68,18 +68,18 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} retrieved successfully`,
+      message: `User with id ${user.id} retrieved successfully`,
     });
   }
 
   @HandleErrors()
   async createUser(req: Request, res: Response): Promise<void> {
-    const userData: User = req.body;
+    const userData: InputUser = req.body;
     const user = await this.userService.createUser(userData);
     res.status(201).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} created successfully`,
+      message: `User with id ${user.id} created successfully`,
     });
   }
 
@@ -91,7 +91,7 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} updated successfully`,
+      message: `User with id ${user.id} updated successfully`,
     });
   }
 
@@ -102,7 +102,7 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} deleted successfully`,
+      message: `User with id ${user.id} deleted successfully`,
     });
   }
 
@@ -115,11 +115,11 @@ class UserController {
       type: fileData.mimetype,
       data: fileData.buffer,
     } as File);
-    const user = await this.userService.addFile(id, file._id.toString());
+    const user = await this.userService.addFile(id, file.id);
     res.status(200).json({
       status: "success",
       data: user,
-      message: `File ${file.name} with id ${file._id} successfully added to user with id ${user._id}`,
+      message: `File ${file.name} with id ${file.id} successfully added to user with id ${user.id}`,
     });
   }
 
