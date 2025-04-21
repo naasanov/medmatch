@@ -5,8 +5,6 @@ import {
   IsEmail,
   IsBoolean,
   IsDate,
-  IsArray,
-  IsMongoId,
   ValidateNested,
   IsOptional,
   IsDefined,

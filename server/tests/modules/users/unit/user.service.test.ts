@@ -35,8 +35,8 @@ describe("UserService", () => {
       const users = await userService.getAllUsers();
 
       expect(users.length).toBe(2);
-      expect(users.some((user) => user._id.equals(user1._id))).toBe(true);
-      expect(users.some((user) => user._id.equals(user2._id))).toBe(true);
+      expect(users.some((user) => user.id === user1.id)).toBe(true);
+      expect(users.some((user) => user.id === user2.id)).toBe(true);
     });
 
     it("should return all users with populated user structure", async () => {
@@ -44,8 +44,8 @@ describe("UserService", () => {
       const users = await userService.getAllUsers();
 
       expect(users.length).toBe(1);
-      expect(users[0]._id).toEqual(user._id);
-      expect(users[0].profile.files[0]._id).toEqual(user.profile.files[0]._id);
+      expect(users[0].id).toEqual(user.id);
+      expect(users[0].profile.files[0].id).toEqual(user.profile.files[0].id);
       expectMatch(TestUserValidator, users[0]);
     });
   });
@@ -55,19 +55,19 @@ describe("UserService", () => {
       const user = await createTestUser();
       await createTestUser();
 
-      const foundUser = await userService.getUserById(user._id.toString());
+      const foundUser = await userService.getUserById(user.id.toString());
 
-      expect(foundUser._id).toEqual(user._id);
+      expect(foundUser.id).toEqual(user.id);
     });
 
     it("should return a populated user", async () => {
       const user = await createTestUser();
-      const foundUser = await userService.getUserById(user._id.toString());
+      const foundUser = await userService.getUserById(user.id.toString());
 
       const originalFiles = user.profile.files;
       const foundFiles = foundUser.profile.files;
       expect(foundFiles.length).toBeGreaterThan(0);
-      expect(foundFiles[0]._id).toEqual(originalFiles[0]._id);
+      expect(foundFiles[0].id).toEqual(originalFiles[0].id);
       expectMatch(TestUserValidator, foundUser);
     });
 
@@ -95,7 +95,7 @@ describe("UserService", () => {
       const createdUser = await userService.createUser(userData);
 
       const users = await UserModel.find();
-      expect(users[0]._id).toEqual(createdUser._id);
+      expect(users[0].id).toEqual(createdUser.id);
       expectMatch(TestUserValidator, createdUser);
     });
 
@@ -127,7 +127,7 @@ describe("UserService", () => {
     it("should not change the number of users", async () => {
       const user = await createTestUser();
 
-      await userService.updateUser(user._id.toString(), {
+      await userService.updateUser(user.id.toString(), {
         first: "NewFirstName",
       });
 
@@ -139,7 +139,7 @@ describe("UserService", () => {
       const user = await createTestUser();
       const newFirst = `${user.first}!`;
 
-      await userService.updateUser(user._id.toString(), {
+      await userService.updateUser(user.id.toString(), {
         first: newFirst,
       });
 
@@ -153,12 +153,12 @@ describe("UserService", () => {
       const user2 = await createTestUser();
       const newFirst = `${user1.first}!`;
 
-      const updatedUser = await userService.updateUser(user1._id.toString(), {
+      const updatedUser = await userService.updateUser(user1.id.toString(), {
         first: newFirst,
       });
 
-      expect(updatedUser._id).not.toEqual(user2._id);
-      expect(updatedUser._id).toEqual(user1._id);
+      expect(updatedUser.id).not.toEqual(user2.id);
+      expect(updatedUser.id).toEqual(user1.id);
       expect(updatedUser.first).toEqual(newFirst);
       expectMatch(TestUserValidator, updatedUser);
     });
@@ -183,7 +183,7 @@ describe("UserService", () => {
         email: "different@example.com",
       });
       await expect(
-        userService.updateUser(user2._id.toString(), {
+        userService.updateUser(user2.id.toString(), {
           email: "test@example.com",
         })
       ).rejects.toThrow(UserConflictError);
@@ -198,7 +198,7 @@ describe("UserService", () => {
         email: "different@example.com",
       });
       await expect(
-        userService.updateUser(user2._id.toString(), {
+        userService.updateUser(user2.id.toString(), {
           email: "TEST@example.com",
         })
       ).rejects.toThrow(UserConflictError);
@@ -210,20 +210,20 @@ describe("UserService", () => {
       const user = await createTestUser();
       await createTestUser();
 
-      await userService.deleteUser(user._id.toString());
+      await userService.deleteUser(user.id.toString());
 
       const users = await UserModel.find();
       expect(users.length).toBe(1);
-      expect(users[0]._id).not.toEqual(user._id);
+      expect(users[0].id).not.toEqual(user.id);
     });
 
     it("should return the deleted user", async () => {
       const user = await createTestUser();
       await createTestUser();
 
-      const deletedUser = await userService.deleteUser(user._id.toString());
+      const deletedUser = await userService.deleteUser(user.id.toString());
 
-      expect(deletedUser._id).toEqual(user._id);
+      expect(deletedUser.id).toEqual(user.id);
       expectMatch(TestUserValidator, deletedUser);
     });
 
@@ -244,13 +244,13 @@ describe("UserService", () => {
       const files = user.profile.files;
 
       const updatedUser = await userService.addFile(
-        user._id.toString(),
-        file._id.toString()
+        user.id.toString(),
+        file.id.toString()
       );
       const updatedFiles = updatedUser.profile.files;
 
       expect(updatedFiles.length).toBe(files.length + 1);
-      expect(updatedFiles.some((f) => f._id.equals(file._id))).toBe(true);
+      expect(updatedFiles.some((f) => f.id === file.id)).toBe(true);
     });
 
     it("should return an updated user with the new file", async () => {
@@ -258,13 +258,13 @@ describe("UserService", () => {
       const file = await createTestFile();
 
       const updatedUser = await userService.addFile(
-        user._id.toString(),
-        file._id.toString()
+        user.id.toString(),
+        file.id.toString()
       );
       const updatedFiles = updatedUser.profile.files;
 
-      expect(updatedUser._id).toEqual(user._id);
-      expect(updatedFiles.some((f) => f._id.equals(file._id))).toBe(true);
+      expect(updatedUser.id).toEqual(user.id);
+      expect(updatedFiles.some((f) => f.id === file.id)).toBe(true);
       expectMatch(TestUserValidator, updatedUser);
     });
 
@@ -274,7 +274,7 @@ describe("UserService", () => {
       await createTestUser();
       const file = await createTestFile();
       await expect(
-        userService.addFile(new ObjectId().toString(), file._id.toString())
+        userService.addFile(new ObjectId().toString(), file.id.toString())
       ).rejects.toThrow(UserNotFoundError);
     });
 
@@ -283,7 +283,7 @@ describe("UserService", () => {
       const user = await createTestUser();
       const file = user.profile.files[0];
       await expect(
-        userService.addFile(user._id.toString(), file._id.toString())
+        userService.addFile(user.id.toString(), file.id.toString())
       ).rejects.toThrow(FileConflictError);
     });
   });
@@ -295,13 +295,13 @@ describe("UserService", () => {
       const file = files[0];
 
       const updatedUser = await userService.removeFile(
-        user._id.toString(),
-        file._id.toString()
+        user.id.toString(),
+        file.id.toString()
       );
       const updatedFiles = updatedUser.profile.files;
 
       expect(updatedFiles.length).toBe(files.length - 1);
-      expect(updatedFiles.some((f) => f._id.equals(file._id))).toBe(false);
+      expect(updatedFiles.some((f) => f.id === file.id)).toBe(false);
     });
 
     it("should return an updated user without the deleted file", async () => {
@@ -310,13 +310,13 @@ describe("UserService", () => {
       const file = files[0];
 
       const updatedUser = await userService.removeFile(
-        user._id.toString(),
-        file._id.toString()
+        user.id.toString(),
+        file.id.toString()
       );
       const updatedFiles = updatedUser.profile.files;
 
-      expect(updatedUser._id).toEqual(user._id);
-      expect(updatedFiles.some((f) => f._id.equals(file._id))).toBe(false);
+      expect(updatedUser.id).toEqual(user.id);
+      expect(updatedFiles.some((f) => f.id === file.id)).toBe(false);
       expectMatch(TestUserValidator, updatedUser);
     });
 
@@ -326,7 +326,7 @@ describe("UserService", () => {
       await createTestUser();
       const file = await createTestFile();
       await expect(
-        userService.removeFile(new ObjectId().toString(), file._id.toString())
+        userService.removeFile(new ObjectId().toString(), file.id.toString())
       ).rejects.toThrow(UserNotFoundError);
     });
 
@@ -334,7 +334,7 @@ describe("UserService", () => {
       expect.assertions(1);
       const user = await createTestUser();
       await expect(
-        userService.removeFile(user._id.toString(), new ObjectId().toString())
+        userService.removeFile(user.id.toString(), new ObjectId().toString())
       ).rejects.toThrow(FileNotFoundError);
     });
 
@@ -343,7 +343,7 @@ describe("UserService", () => {
       const user = await createTestUser();
       const file = await createTestFile();
       await expect(
-        userService.removeFile(user._id.toString(), file._id.toString())
+        userService.removeFile(user.id.toString(), file.id.toString())
       ).rejects.toThrow(FileNotFoundError);
     });
   });
