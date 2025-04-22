@@ -1,6 +1,4 @@
 # Medmatch
-## What Is Medmatch?
-Medmatch is a career oriented social media platform, similar to LinkedIn, designed for pre-med students. You can use it to find mentoring, volunteering, jobs, and other career building opportunities.
 ## Tech Stack
 * Frontend
   * Next.js
