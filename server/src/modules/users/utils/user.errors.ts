@@ -1,6 +1,15 @@
 import { UserCode, ProfileCode } from "@/types/errorCodes";
 import { ConflictError, NotFoundError } from "@/types/errors";
 
+enum UserCode {
+  UserNotFound = 'USER_NOT_FOUND',
+  UserConflict = 'USER_CONFLICT',
+}
+
+enum ProfileCode {
+  ProfileNotFound = 'PROFILE_NOT_FOUND',
+}
+
 class ProfileNotFoundError extends NotFoundError {
   constructor(message: string = "Profile not found") {
     super(message, ProfileCode.ProfileNotFound);
@@ -19,4 +28,4 @@ class UserConflictError extends ConflictError {
   }
 }
 
-export { UserNotFoundError, UserConflictError, ProfileNotFoundError };
+export { UserNotFoundError, UserConflictError, ProfileNotFoundError, UserCode, ProfileCode };

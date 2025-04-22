@@ -1,6 +1,11 @@
 import { ConflictError, NotFoundError } from "@/types/errors";
 import { FileCode } from "@/types/errorCodes";
 
+enum FileCode {
+  FileNotFound = 'FILE_NOT_FOUND',
+  FileConflict = 'FILE_CONFLICT',
+}
+
 class FileNotFoundError extends NotFoundError {
   constructor(message: string = "File not found") {
     super(message, FileCode.FileNotFound);
@@ -13,4 +18,4 @@ class FileConflictError extends ConflictError {
   }
 }
 
-export { FileNotFoundError, FileConflictError };
+export { FileNotFoundError, FileConflictError, FileCode };

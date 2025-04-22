@@ -1,3 +1,6 @@
+import { UserCode, ProfileCode } from '@/modules/users';
+import { FileCode } from '@/modules/files';
+
 enum MongooseCode {
   DuplicateKey = 11000,
 }
@@ -11,21 +14,13 @@ enum GeneralCode {
   Conflict = 'CONFLICT',
 }
 
-enum UserCode {
-  UserNotFound = 'USER_NOT_FOUND',
-  UserConflict = 'USER_CONFLICT',
-  InvalidCredentials = 'INVALID_CREDENTIALS',
-}
+const allErrorCodes = [
+  ...Object.values(GeneralCode),
+  ...Object.values(UserCode),
+  ...Object.values(ProfileCode),
+  ...Object.values(FileCode),
+]
 
-enum ProfileCode {
-  ProfileNotFound = 'PROFILE_NOT_FOUND',
-}
+type ErrorCode = typeof allErrorCodes[number];
 
-enum FileCode {
-  FileNotFound = 'FILE_NOT_FOUND',
-  FileConflict = 'FILE_CONFLICT',
-}
-
-type ErrorCode = GeneralCode | UserCode | ProfileCode | FileCode;
-
-export { MongooseCode, ErrorCode, GeneralCode, UserCode, ProfileCode, FileCode };
+export { allErrorCodes, MongooseCode, ErrorCode, GeneralCode };
