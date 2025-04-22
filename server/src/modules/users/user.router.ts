@@ -24,12 +24,6 @@ const fileService = new FileService(FileModel);
 const userController = new UserController(userService, fileService);
 const upload = multer();
 
-userRouter.post(
-  "/auth/login",
-  validation(validateBody(CredentialsValidator)),
-  userController.login
-)
-
 userRouter.use(authenticate)
 
 userRouter.get("/", userController.getAllUsers);

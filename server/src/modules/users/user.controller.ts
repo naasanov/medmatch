@@ -2,15 +2,12 @@ import { UserService, InputUser } from "@/modules/users";
 import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
-import { UserCode } from "@/types/errorCodes";
-import jwt from "jsonwebtoken";
 
 class UserController {
   constructor(
     private userService: UserService,
     private fileService: FileService
   ) {
-    this.login = this.login.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
     this.getUserById = this.getUserById.bind(this);
     this.createUser = this.createUser.bind(this);
@@ -18,37 +15,6 @@ class UserController {
     this.deleteUser = this.deleteUser.bind(this);
     this.addFile = this.addFile.bind(this);
     this.removeFile = this.removeFile.bind(this);
-  }
-
-  @HandleErrors()
-  async login(req: Request, res: Response): Promise<void> {
-    const { email, password } = req.body;
-    const user = await this.userService.login(email, password);
-    if (!user) {
-      res.status(401).json({
-        status: "error",
-        errors: [
-          {
-            type: "http",
-            details: "Invalid email or password",
-            // code: UserCode.InvalidCredentials,
-          },
-        ],
-      });
-      return;
-    }
-
-    const accessToken = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.NEXTAUTH_SECRET!,
-      { expiresIn: "1h" }
-    );
-
-    res.status(200).json({
-      status: "success",
-      data: { accessToken, ...user },
-      message: `User with id ${user._id} logged in successfully`,
-    });
   }
 
   @HandleErrors()
