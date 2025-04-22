@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { HttpError } from "@/types/errors";
 import { GeneralCode } from "@/types/errorCodes";
 import dotenv from "dotenv";
-import { IncomingMessage } from "http";
 dotenv.config();
 
 const errorHandler = (error: any, req: Request, res: Response, next: NextFunction): any => {
@@ -66,7 +65,6 @@ function HandleErrors() {
       try {
         await originalMethod.apply(this, [req, res, next]);
       } catch (error) {
-        console.log("error type", error instanceof IncomingMessage)
         next(error);
       }
     };

@@ -1,35 +1,56 @@
-import { GeneralCode } from "@/types/errorCodes";
+import { UnauthorizedError } from "@/types/errors";
 import { NextFunction, Request, Response } from "express";
-import { getToken } from "next-auth/jwt";
+import jwt from "jsonwebtoken";
 
 /**
- * Middleware that authenticates a user based on their NextAuth token.
- * If the token is not present, it sends a 401 Unauthorized response.
+ * Middleware to authenticate the user using JWT.
+ * It checks for the presence of an authorization header,
+ * verifies the token, and adds the user email and id to `res.locals.user`.
+ * Moves to the next middleware if authentication is successful.
+ * @throws An {@link UnauthorizedError} if the token is missing, invalid, or has an invalid payload shape.
  */
 async function authenticate(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<any> {
-  console.log("Authenticating user...");
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-  console.log("Token:", token);
-  if (!token) {
-    return res.status(401).json({
-      status: "error",
-      errors: [
-        {
-          type: "http",
-          details: "Unauthorized",
-          code: GeneralCode.Unauthorized,
-        },
-      ],
-    });
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      throw new UnauthorizedError("No authorization header provided");
+    }
+    
+    // Extract token from "Bearer <token>" format
+    const token = authorization.split(" ")[1];
+  
+    if (token === undefined) {
+      throw new UnauthorizedError("No token provided");
+    }
+  
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    } catch (error) {
+      throw new UnauthorizedError("Unauthorized token");
+    }
+  
+    if (
+      !decoded ||
+      typeof decoded !== "object" ||
+      typeof decoded.email !== "string" ||
+      typeof decoded.id !== "string"
+    ) {
+      throw new UnauthorizedError("Invalid payload shape");
+    }
+  
+    res.locals.user = {
+      email: decoded.email,
+      id: decoded.id,
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 }
 
 export { authenticate };
