@@ -1,5 +1,4 @@
 import { ConflictError, NotFoundError } from "@/types/errors";
-import { FileCode } from "@/types/errorCodes";
 
 enum FileCode {
   FileNotFound = 'FILE_NOT_FOUND',

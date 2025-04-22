@@ -1,4 +1,3 @@
-import { UserCode, ProfileCode } from "@/types/errorCodes";
 import { ConflictError, NotFoundError } from "@/types/errors";
 
 enum UserCode {
