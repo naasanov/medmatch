@@ -14,7 +14,6 @@ enum GeneralCode {
 enum UserCode {
   UserNotFound = 'USER_NOT_FOUND',
   UserConflict = 'USER_CONFLICT',
-  InvalidCredentials = 'INVALID_CREDENTIALS',
 }
 
 enum ProfileCode {
@@ -26,6 +25,13 @@ enum FileCode {
   FileConflict = 'FILE_CONFLICT',
 }
 
-type ErrorCode = GeneralCode | UserCode | ProfileCode | FileCode;
+const allErrorCodes = [
+  ...Object.values(GeneralCode),
+  ...Object.values(UserCode),
+  ...Object.values(ProfileCode),
+  ...Object.values(FileCode),
+]
 
-export { MongooseCode, ErrorCode, GeneralCode, UserCode, ProfileCode, FileCode };
+type ErrorCode = typeof allErrorCodes[number];
+
+export { allErrorCodes, MongooseCode, ErrorCode, GeneralCode, UserCode, ProfileCode, FileCode };

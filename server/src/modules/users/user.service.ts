@@ -10,6 +10,7 @@ import {
 import { MongoError, ObjectId } from "mongodb";
 import { FileConflictError, FileNotFoundError } from "@/modules/files";
 import { MongooseCode } from "@/types/errorCodes";
+import bcrypt from "bcrypt";
 
 class UserService {
   constructor(private userModel: UserModelType) {}
@@ -33,9 +34,23 @@ class UserService {
     return User.fromDoc(doc);
   }
 
+  async getUserByEmail(email: string): Promise<User> {
+    const doc = await this.userModel
+      .findOne<UserDoc>({ email })
+      .populate("profile.files")
+      .exec();
+      if (!doc) {
+        throw new UserNotFoundError(`User with email ${email} not found`);
+      }
+      return User.fromDoc(doc);
+  }
+
   async createUser(userData: InputUser): Promise<User> {
     try {
-      const user = new this.userModel(userData);
+      const user = new this.userModel({
+        ...userData,
+        password: await bcrypt.hash(userData.password, 10),
+      });
       await user.save();
       const populated: UserDoc = await user.populate("profile.files");
       return User.fromDoc(populated);
@@ -52,8 +67,11 @@ class UserService {
     }
   }
 
-  async updateUser(userId: string, userData: Partial<User>): Promise<User> {
+  async updateUser(userId: string, userData: Partial<InputUser>): Promise<User> {
     try {
+      if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 10);
+      }
       const doc = await this.userModel
         .findByIdAndUpdate<UserDoc>(userId, userData, { new: true })
         .populate("profile.files")
