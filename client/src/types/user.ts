@@ -1,26 +1,45 @@
 interface File {
-  _id: string;
+  id: string;
   name: string;
-  type: string;
+  type: "image/jpeg" | "image/png" | "application/pdf";
   data: Buffer;
 }
 
-interface User {
-  _id: string;
-  accessToken?: string;
+/** Profile object to be used as input for an API request */
+interface InputProfile {
+  files: string[]; // Array of file IDs
+  bio?: string;
+  work?: string;
+  research?: string;
+  volunteering?: string;
+}
+
+/** Profile object returned by the backend. */
+interface Profile extends Omit<InputProfile, "files"> {
+  id: string;
+  files: File[];
+}
+
+/** 
+ * User object to be used as input for an API request.  
+ * @defaults `profile` to an empty profile
+ * @defaults `entryDate` to the current date
+ */
+interface InputUser {
   first: string;
   last: string;
   email: string;
   password: string;
-  profile: {
-    bio?: string;
-    work?: string;
-    research?: string;
-    volunteering?: string;
-    files?: File[];
-  };
+  profile?: InputProfile;
   isEmployer: boolean;
+  entryDate?: Date;
+}
+
+/** User object returned by the backend. */
+interface User extends Omit<InputUser, "profile"> {
+  id: string;
+  profile: Profile;
   entryDate: Date;
 }
 
-export type { User, File };
+export type { User, Profile, File, InputUser, InputProfile };

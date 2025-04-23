@@ -28,9 +28,16 @@ const handler = NextAuth({
         if (!user) {
           return null;
         }
-        // The authorize function needs a user object with an `id` field,
-        // so just set that equal to _id for simplicity
-        return { ...user, id: user._id };
+
+        const result = {
+          id: user.id,
+          first: user.first,
+          last: user.last,
+          email: user.email,
+          profile: user.profile,
+          isEmployer: user.isEmployer,
+        }
+        return result;
       },
     }),
   ],
