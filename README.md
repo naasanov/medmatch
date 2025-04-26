@@ -74,7 +74,7 @@ The backend follows a modular structure, keeping all structures related to a cer
 
 ## Documentation Website
 We will be using MkDocs for documentation. To run the documentation server, you need to do a few
-things
+things.
 
 ### Setup 
 1. Install MkDocs and required plugins:
@@ -88,10 +88,10 @@ mkdocs serve
 ```
 3. View the site on: http://127.0.0.1:8000/ 
 
-### Building the state documentation
+### Building static documentation
 To build the static site:
 ```bash
 cd docs
 mkdocs build
 ```
-The static site is built in the ```docs/site``` directory
+The static site is built in the ```docs/site``` directory.
