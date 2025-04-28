@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
     "test": "jest --verbose",
-    "test:filter": "jest --verbose --testNamePattern"
+    "test:filter": "jest --verbose --testNamePattern",
+    "docs:serve": "cd docs && mkdocs serve",
+    "docs:build": "cd docs && mkdocs build"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,4 @@
-import { app, connectDB } from "./server";
+import { app, connectDB } from "@/server";
 
 const PORT = process.env.DEV_PORT || 4000;
 
