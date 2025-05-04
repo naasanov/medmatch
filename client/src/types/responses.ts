@@ -1,7 +1,7 @@
 import { ErrorCode } from "@/types/errorCodes";
 
 /**
- * Discriminated type union for an error in an {@link ErrorResponse}.
+ * Discriminated type union for an error in an {@link ErrorBody}.
  * type: "http" indicates an {@link HttpError}, while type: "validation" indicates a {@link ValidationError}.
  */
 interface ApiError {
@@ -33,7 +33,7 @@ interface ValidationError extends ApiError {
  * The generic type `T` is used to specify the type of the data returned in the response.
  * One of the unioned types for the {@link ResponseBody} interface.
  */
-interface SuccessResponse<T = unknown> {
+interface SuccessBody<T = unknown> {
   status: "success";
   data: T;
   message: string;
@@ -43,47 +43,44 @@ interface SuccessResponse<T = unknown> {
  * Structure for the body of an error HTTP response from the backend.
  * One of the unioned types for the {@link ResponseBody} interface.
  */
-interface ErrorResponse {
+interface ErrorBody {
   status: "error";
   errors: ApiError[];
 }
 
 /**
- * A discriminiated type union that represents the body of an HTTP response from the backend.  
- * 
- * The `status` field is used to determine the type of the response, 
- * either "success" for {@link SuccessResponse} or "error" for {@link ErrorResponse}.  
- * 
+ * A discriminiated type union that represents the body of an HTTP response from the backend.
+ *
+ * The `status` field is used to determine the type of the response,
+ * either "success" for {@link SuccessBody} or "error" for {@link ErrorBody}.
+ *
  * For proper type inference, use the {@link isSuccess} and {@link isError} type predicates to check the response type.
- *   
+ *
  * The generic type `T` is used to specify the type of the data returned in the response, given that it is a success.
  */
-type ResponseBody<T = unknown> = SuccessResponse<T> | ErrorResponse;
+type ResponseBody<T = unknown> = SuccessBody<T> | ErrorBody;
 
 /**
  * Type predicate that checks if the response body is a success response.
  */
-function isSuccess<T>(body: ResponseBody<T>): body is SuccessResponse<T> {
+function isSuccess<T>(body: ResponseBody<T>): body is SuccessBody<T> {
   return body.status === "success";
 }
 
 /**
  * Type predicate that checks if the response body is a error response.
  */
-function isError<T>(body: ResponseBody<T>): body is ErrorResponse {
+function isError<T>(body: ResponseBody<T>): body is ErrorBody {
   return body.status === "error";
 }
 
 export type {
-  SuccessResponse,
-  ErrorResponse,
+  SuccessBody,
+  ErrorBody,
   ResponseBody,
   ApiError,
   HttpError,
   ValidationError,
 };
 
-export {
-  isSuccess,
-  isError,
-}
+export { isSuccess, isError };

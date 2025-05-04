@@ -36,9 +36,19 @@ DB_HOST=radish.5ujpyx5.mongodb.net
 DB_COLLECTION=medmatch
 DB_CLUSTER=radish
 DEV_PORT=4000
+FRONTEND_URL=http://localhost:3000
 NODE_ENV=development
+ACCESS_TOKEN_SECRET=[UUID]
+REFRESH_TOKEN_SECRET=[UUID]
 ```
-Make sure to replace the bracketed values with the corresponding data.
+Make sure to replace the bracketed values with the corresponding data (without the brackets).  
+For both of the token secrets you can use a site like [UUID Generator](https://www.uuidgenerator.net/version4) to create a secure value to use as a secret. Just make sure you use a different UUID for each.
+
+You will also need to create a `.env.local` file in the `/client` directory. This file will only contain one value.
+```.env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+```
+
 ### Starting The Development Server
 In order to start the frontend development server, run the following command from the `client` directory.
 ```

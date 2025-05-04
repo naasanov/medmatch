@@ -20,8 +20,8 @@ interface Profile extends Omit<InputProfile, "files"> {
   files: File[];
 }
 
-/** 
- * User object to be used as input for an API request.  
+/**
+ * User object to be used as input for an API request.
  * @defaults `profile` to an empty profile
  * @defaults `entryDate` to the current date
  */
@@ -36,10 +36,16 @@ interface InputUser {
 }
 
 /** User object returned by the backend. */
-interface User extends Omit<InputUser, "profile"> {
+interface ApiUser extends Omit<InputUser, "profile"> {
   id: string;
   profile: Profile;
   entryDate: Date;
 }
 
-export type { User, Profile, File, InputUser, InputProfile };
+/** The tokens returned by the backend auth routes, often paired with an {@link ApiUser} */
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export type { ApiUser, Profile, File, InputUser, InputProfile, Tokens };

@@ -1,8 +1,11 @@
-import { login } from "@/services/authService";
-import NextAuth from "next-auth";
+import { authClient } from "@/lib/authClient";
+import { ApiUser, Tokens } from "@/types/user";
+import NextAuth, { AuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
+import { logout } from "@/services/authService";
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -24,19 +27,29 @@ const handler = NextAuth({
         if (!email || !password) {
           return null;
         }
-        const user = await login(email, password);
-        if (!user) {
+
+        let user: User;
+        try {
+          const { data: body } = await authClient.post<ApiUser & Tokens>(
+            "/auth/login",
+            {
+              email,
+              password,
+            }
+          );
+          user = body.data;
+        } catch (error) {
+          console.error("Error in login:", error);
           return null;
         }
 
         const result = {
           id: user.id,
-          first: user.first,
-          last: user.last,
           email: user.email,
-          profile: user.profile,
-          isEmployer: user.isEmployer,
-        }
+          accessToken: user.accessToken,
+          refreshToken: user.refreshToken,
+        };
+
         return result;
       },
     }),
@@ -47,22 +60,58 @@ const handler = NextAuth({
   // Expose the JWT access token
   callbacks: {
     async jwt({ token, account, user }) {
-      // If credentials were used
+      // Inital credentials sign in
       if (user) {
+        console.log("inital sign in")
         token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+        return token;
       }
-      // If OAuth was used
+      // Or initial oauth sign in
       else if (account) {
-        token.accessToken = account.access_token
+        token.accessToken = account.access_token;
+        return token;
       }
-      return token
+
+      try {
+        if (!token.accessToken || !token.refreshToken) {
+          throw new Error("Missing access or refresh token");
+        }
+
+        // Get expiratoin time of the token
+        const { exp } = jwtDecode(token.accessToken);
+        if (!exp) throw new Error("Missing expiration time in token");
+
+        // Check if token is expired
+        if (Date.now() < exp * 1000) {
+          return token;
+        }
+
+        // Refresh token
+        const { data: body } = await authClient.post<Tokens>("/auth/token", {
+          refreshToken: token.refreshToken,
+        });
+
+        token.accessToken = body.data.accessToken;
+        token.refreshToken = body.data.refreshToken;
+
+        return token;
+      } catch (error) {
+        console.error("Error in JWT callback:", error);
+        await logout();
+        return {
+          ...token,
+          error: "JWT_ERROR",
+        };
+      }
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken
-      return session
-    }
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-});
+      session.accessToken = token.accessToken;
+      return session;
+    },
+  }
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
