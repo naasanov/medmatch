@@ -61,14 +61,4 @@ class UserValidator {
   profile?: ProfileValidator;
 }
 
-class CredentialsValidator {
-  @IsEmail()
-  @IsNotEmpty()
-  email!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password!: string;
-}
-
-export { UserValidator, ProfileValidator, CredentialsValidator };
+export { UserValidator, ProfileValidator };
