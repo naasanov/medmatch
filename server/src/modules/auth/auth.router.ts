@@ -1,10 +1,9 @@
 import {
-  CredentialsValidator,
   UserModel,
   UserService,
   UserValidator,
 } from "@/modules/users";
-import { AuthService, AuthController } from "@/modules/auth";
+import { AuthService, AuthController, CredentialsValidator } from "@/modules/auth";
 import { Router } from "express";
 import { validateBody, validation } from "@/utils/validationMiddleware";
 import { cookie, oneOf, body } from "express-validator";

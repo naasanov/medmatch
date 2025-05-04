@@ -4,9 +4,15 @@ import { GeneralCode } from "@/types/errorCodes";
 import dotenv from "dotenv";
 dotenv.config();
 
-const errorHandler = (error: any, req: Request, res: Response, next: NextFunction): any => {
+// This function needs the unused "next" parameter to be included in order to work properly
+const errorHandler = (
+  error: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
   if (process.env.NODE_ENV === "development") {
-    console.error(error);
+    console.error("Received by error handler:\n", error);
   }
 
   if (res === undefined) {
