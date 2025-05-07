@@ -3,7 +3,12 @@ import { HandleErrors } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 
 class FileController {
-  constructor(private fileService: FileService) {}
+  constructor(private fileService: FileService) {
+    this.getAllFiles = this.getAllFiles.bind(this);
+    this.getFileById = this.getFileById.bind(this);
+    this.createFile = this.createFile.bind(this);
+    this.deleteFile = this.deleteFile.bind(this);
+  }
 
   @HandleErrors()
   async getAllFiles(req: Request, res: Response): Promise<void> {
@@ -37,7 +42,7 @@ class FileController {
     const file = await this.fileService.createFile(fileData as File);
     res.status(201).json({
       success: true,
-      message: `File with id ${file._id} created successfully`,
+      message: `File with id ${file.id} created successfully`,
       data: file,
     });
   }

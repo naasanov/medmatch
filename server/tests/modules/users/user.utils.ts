@@ -1,15 +1,13 @@
 import {
-  PopulatedProfile,
+  InputUser,
   ProfileValidator,
   User,
   UserDoc,
-  PopulatedUser,
   UserModel,
   UserService,
   UserValidator,
 } from "@/modules/users";
 import { File, FileModel, FileService } from "@/modules/files";
-import { ID } from "@/types/mongoose";
 import {
   IsArray,
   IsDefined,
@@ -24,8 +22,8 @@ import MaxBufferSize from "@/utils/maxBufferSize";
 
 // Helper Functions
 
-async function createTestFile(data?: Partial<File>): Promise<File & ID> {
-  const defaultFile: File = {
+async function createTestFile(data?: Partial<File>): Promise<File> {
+  const defaultFile: Omit<File, "id"> = {
     type: "image/png",
     name: `Test-${Date.now()}`,
     data: Buffer.from("test data"),
@@ -37,11 +35,11 @@ async function createTestFile(data?: Partial<File>): Promise<File & ID> {
   };
 
   const file = new FileModel(fileData);
-  await file.save();
-  return file;
+  const doc = await file.save();
+  return File.fromDoc(doc);
 }
 
-async function defaultUserData(): Promise<User> {
+async function defaultUserData(): Promise<InputUser> {
   const testFile = await createTestFile();
   return {
     first: `Test-${Date.now()}`,
@@ -51,13 +49,13 @@ async function defaultUserData(): Promise<User> {
     isEmployer: false,
     profile: {
       bio: "Test bio",
-      files: [testFile._id],
+      files: [testFile.id],
     },
     entryDate: new Date(),
   };
 }
 
-async function createTestUser(data?: Partial<User>): Promise<UserDoc> {
+async function createTestUser(data?: Partial<InputUser>): Promise<User> {
   const defaultUser = await defaultUserData();
 
   const userData = {
@@ -67,17 +65,26 @@ async function createTestUser(data?: Partial<User>): Promise<UserDoc> {
 
   const user = new UserModel(userData);
   await user.save();
-  return user;
+  const populated: UserDoc = await user.populate("profile.files");
+  return User.fromDoc(populated);
 }
 
-async function createPopulatedTestUser(
-  data?: Partial<User>
-): Promise<PopulatedUser> {
-  const user = await createTestUser(data);
-  const populatedUser = await user.populate<{ profile: PopulatedProfile }>(
-    "profile.files"
-  );
-  return populatedUser;
+async function createUnpopulatedTestUser(
+  data?: Partial<InputUser>
+): Promise<InputUser & { id: string }> {
+  const defaultUser = await defaultUserData();
+
+  const userData = {
+    ...defaultUser,
+    ...data,
+  };
+
+  const user = new UserModel(userData);
+  await user.save();
+  return {
+    ...userData,
+    id: user._id.toString(),
+  };
 }
 
 // Validators
@@ -105,7 +112,7 @@ class TestProfileValidator extends ProfileValidator {
 
 class TestUserValidator extends UserValidator {
   @IsDefined()
-  _id!: Types.ObjectId;
+  id!: Types.ObjectId;
 
   @ValidateNested()
   @Type(() => TestProfileValidator)
@@ -139,7 +146,7 @@ export {
   defaultUserData,
   createTestUser,
   createTestFile,
-  createPopulatedTestUser,
+  createUnpopulatedTestUser,
   TestUserValidator,
   TestProfileValidator,
   TestFileValidator,

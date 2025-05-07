@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <main className="flex justify-center mx-40">
-      <section className="flex flex-col my-28 w-[400px] pt-10 mr-5">
-        <header className="text-6xl font-bold text-[#0B3FC1] font-arial leading-[80px]">
+      <section className="flex flex-col my-28 max-w-lg">
+        <header className="text-6xl font-bold text-accentDarkBlue font-sans">
           Welcome to MedMatch
         </header>
         <p className="text-xl font-semibold my-5 text-[#626980] leading-8">
