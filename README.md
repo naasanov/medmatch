@@ -88,6 +88,7 @@ mkdocs serve
 ```
 3. View the site on: http://127.0.0.1:8000/ 
 
+
 ### Building static documentation
 To build the static site:
 ```bash
