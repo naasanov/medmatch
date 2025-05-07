@@ -44,7 +44,8 @@ const errorHandler = (
 };
 
 /**
- * Decorator that passes any caught error to the error handler.
+ * Decorator that should be attached to all controller methods.
+ * It passes any caught error to the error handler and binds the method to the class instance.
  * The error handler will convert any caught `HttpError` to a JSON response and log the error in development.
  * Any other error will be converted to a generic 500 error.
  */
@@ -72,7 +73,7 @@ function ControllerMethod() {
       }
     };
 
-    // Bind the wrapper itself to the class instance
+    // Every time the method is called, it will be bound to the class instance
     return {
       configurable: true,
       enumerable: false,
