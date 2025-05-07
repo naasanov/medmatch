@@ -4,7 +4,12 @@ import { GeneralCode } from "@/types/errorCodes";
 import dotenv from "dotenv";
 dotenv.config();
 
-const errorHandler = (error: any, req: Request, res: Response, next: NextFunction): any => {
+const errorHandler = (
+  error: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
   if (process.env.NODE_ENV === "development") {
     console.error(error);
   }
@@ -44,7 +49,7 @@ const errorHandler = (error: any, req: Request, res: Response, next: NextFunctio
  * The error handler will convert any caught `HttpError` to a JSON response and log the error in development.
  * Any other error will be converted to a generic 500 error.
  */
-function HandleErrors() {
+function ControllerMethod() {
   return function (
     target: any,
     propertyKey: string,
@@ -57,18 +62,26 @@ function HandleErrors() {
     }
 
     descriptor.value = async function (
-      this: any,
       req: Request,
       res: Response,
       next: NextFunction
     ) {
       try {
-        await originalMethod.apply(this, [req, res, next]);
+        return await originalMethod.call(this, req, res, next);
       } catch (error) {
         next(error);
       }
     };
+
+    // Bind the wrapper itself to the class instance
+    return {
+      configurable: true,
+      enumerable: false,
+      get() {
+        return descriptor.value!.bind(this);
+      },
+    };
   };
 }
 
-export { errorHandler, HandleErrors };
+export { errorHandler, ControllerMethod };
