@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { HttpError } from "@/types/errors";
-import { GeneralCode } from "@/types/errorCodes";
+import { GeneralCode, HttpError } from "@/types/errors";
 import dotenv from "dotenv";
 dotenv.config();
 
