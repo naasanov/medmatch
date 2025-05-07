@@ -19,36 +19,13 @@ function Navbar() {
             height={100}
           />
         </Link>
-        {/* <input
-          className="text-[#5f8566] no-underline py-2 px-3 mr-4 text-lg rounded-3xl border-2 border-[#A8A8A8] bg-[#ffffff]"
-          placeholder="Search..."
-          type="text"
-        /> */}
       </div>
       <ul className="flex items-center p-0 m-0 list-none gap-4">
-        {/* <li>
-          <Link href="/messages" className={linkStyle}>
-            Messages
-          </Link>
+        <li>
+          <Link href="/" className="text-primary-blue text-lg pr-10 font-semibold">Sign In</Link>
         </li>
         <li>
-          <Link href="/opportunities" className={linkStyle}>
-            Opportunities
-          </Link>
-        </li>
-        <Link href="/profile" className={`${linkStyle} mr-3`}>
-          <Image
-            src={pic}
-            alt="profile icon"
-            width={50}
-            height={50}
-          />
-        </Link> */}
-        <li>
-          <Link href="/" className="text-[#0B3FC1] text-lg pr-10 font-semibold">Sign In</Link>
-        </li>
-        <li>
-          <Button className="w-36 h-12 text-lg font-semibold bg-[#0B3FC1] hover:bg-[#ffffff] hover:text-[#0B3FC1] hover:outline hover:outline-[#0B3FC1] hover:outline-[2]">
+          <Button className="w-36 h-12 text-lg font-semibold bg-primary-blue hover:bg-[#ffffff] hover:text-primary-blue hover:outline hover:outline-primary-blue hover:outline-[2]">
             <span>Sign Up</span>
           </Button>
         </li>

@@ -11,10 +11,10 @@ export default function Home() {
         <header className="text-6xl font-bold text-accentDarkBlue font-sans">
           Welcome to MedMatch
         </header>
-        <p className="text-xl font-semibold my-5 text-[#626980] leading-8">
+        <p className="text-xl font-semibold my-5 text-body-text leading-8">
         An all-in-one platform that helps premed students gain industry experience, make valuable connections, and obtain the resources they need to succeed in their career
         </p>
-        <Button className="w-60 h-12 text-lg font-semibold bg-[#735AFB] hover:bg-[#ffffff] hover:text-[#735AFB] hover:outline hover:outline-[#735AFB] hover:outline-[2]">
+        <Button className="w-60 h-12 text-lg font-semibold bg-primary-purple hover:bg-[#ffffff] hover:text-primary-purple hover:outline hover:outline-primary-purple hover:outline-[2]">
           <Play/>
           <span>Watch a Run Through</span>
         </Button>
