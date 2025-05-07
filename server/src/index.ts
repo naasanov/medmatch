@@ -30,7 +30,7 @@ function connectionString() {
   const collection = process.env.DB_COLLECTION;
   const cluster = process.env.DB_CLUSTER;
 
-  return `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster};`
+  return `${dialect}://${username}:${password}@${host}/${collection}?retryWrites=true&w=majority&appName=${cluster}`
 }
 
 mongoose.connect(connectionString());
@@ -41,6 +41,7 @@ db.on("connected", () => {
 });
 
 db.on("error", (e) => {
+  console.log(connectionString())
   console.log("[database]: Connection error:", e);
 });
 
