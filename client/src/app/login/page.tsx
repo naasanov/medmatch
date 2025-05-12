@@ -1,5 +1,3 @@
-// replace all hardcoded colors with default colors once setup
-
 "use client";
 
 import { useState } from "react";

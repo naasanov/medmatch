@@ -8,10 +8,8 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -24,13 +22,12 @@ import linkedin from "@/assets/linkedin-icon.png";
 const formSchema = z.object({
   first: z.string().min(1).max(50),
   last: z.string().min(1).max(50),
-  phone: z.string(), // figure out phone number validation - might be a different library than zod
+  phone: z.string().min(10).max(15), // set phone number to not exceed ITU max digits of 15 (allow for country codes)
   birthday: z.string().date(),
   email: z.string().email(),
   password: z.string().min(8)
 })
 
-type SignupFormValues = z.infer<typeof formSchema>;
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -178,65 +175,3 @@ export default function SignUpForm() {
   )
 }
 
-/*
-function Signup() {
-  const firstRef = useRef<HTMLInputElement>(null);
-
-  const [first, setFirst] = useState('');
-  const [last, setLast] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    firstRef?.current?.focus();
-  }, [])
-
-  useEffect(() => {
-    setErrMsg('');
-  }, [first, last, email, password])
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-  }
-
-  return (
-    <>
-      {success ? (
-        <div>
-          <h1>You have signed up!</h1>
-          <p>Continue to <Link href='/profile'> profile</Link></p>
-        </div>
-      ) : (
-        <div>
-          <p>{errMsg}</p>
-          <h1>Sign Up</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor='first'>First Name:</label>
-            <input type='text' id='first' ref={firstRef} onChange={e => setFirst(e.target.value)} value={first} required />
-
-            <label htmlFor='last'>Last Name:</label>
-            <input type='text' id='last' onChange={e => setLast(e.target.value)} value={last} required />
-            <br />
-
-            <label htmlFor='email'>Email:</label>
-            <input type='text' id='email' onChange={e => setEmail(e.target.value)} value={email} required />
-            <br />
-
-            <label htmlFor='password'>Password:</label>
-            <input type='password' id='password' onChange={e => setPassword(e.target.value)} value={password} required />
-            <br />
-
-            <button>Sign In</button>
-          </form>
-        </div>
-      )
-      }
-    </>
-  );
-}
-
-export default Signup;
-*/
