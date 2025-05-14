@@ -1,5 +1,4 @@
 import request from "supertest";
-import { app } from "@/server";
 import { expectMatch } from "#/utils/validation";
 import {
   SuccessBodyValidator,
@@ -11,13 +10,20 @@ import {
   defaultUserData,
 } from "#/modules/users/utils/user.helpers";
 import { TestUserValidator } from "#/modules/users/utils/user.validators";
+import TestAgent from "supertest/lib/agent";
+import { getAuthenticatedAgent } from "#/utils/mockAuthentication";
+
 
 describe("User Router", () => {
-  beforeEach(async () => {});
+  let agent: TestAgent;
+
+  beforeAll(() => {
+    agent = getAuthenticatedAgent();
+  })
 
   describe("GET /", () => {
     it("should return an empty list when there are no users", async () => {
-      const response = await request(app).get("/api/users");
+      const response = await agent.get("/api/users");
 
       expect(response.status).toBe(200);
       expect(response.headers["content-type"]).toBe(
@@ -29,7 +35,7 @@ describe("User Router", () => {
     it("should return all users", async () => {
       await createTestUser();
 
-      const response = await request(app).get("/api/users");
+      const response = await agent.get("/api/users");
 
       expect(response.status).toBe(200);
       expect(response.headers["content-type"]).toBe(
@@ -45,7 +51,7 @@ describe("User Router", () => {
 
   describe("GET /:id", () => {
     it("should return a validation error for invalid id", async () => {
-      const response = await request(app).get("/api/users/invalid");
+      const response = await agent.get("/api/users/invalid");
 
       expect(response.status).toBe(400);
       expect(response.headers["content-type"]).toBe(
@@ -65,7 +71,7 @@ describe("User Router", () => {
       const userData = await defaultUserData();
       userData.email = "invalid email";
 
-      const response = await request(app).post("/api/users").send(userData);
+      const response = await agent.post("/api/users").send(userData);
 
       expect(response.status).toBe(400);
       expect(response.headers["content-type"]).toBe(
@@ -92,7 +98,7 @@ describe("User Router", () => {
         profile: 6,
       };
 
-      const response = await request(app).post("/api/users").send(invalidData);
+      const response = await agent.post("/api/users").send(invalidData);
 
       expect(response.status).toBe(400);
       expect(response.headers["content-type"]).toBe(
@@ -118,7 +124,7 @@ describe("User Router", () => {
         volunteering: 4,
       };
 
-      const response = await request(app).post("/api/users").send(invalidData);
+      const response = await agent.post("/api/users").send(invalidData);
 
       expect(response.status).toBe(400);
       expect(response.headers["content-type"]).toBe(
@@ -145,7 +151,7 @@ describe("User Router", () => {
         isEmployer: true,
       };
 
-      const response = await request(app).post("/api/users").send(invalidData);
+      const response = await agent.post("/api/users").send(invalidData);
 
       expect(response.status).toBe(400);
       expect(response.headers["content-type"]).toBe(
