@@ -1,13 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import pic from "@/assets/profile.svg";
 import title from "@/assets/medmatch_.svg";
 import { Button } from "@/components/ui/button"
 
 
 function Navbar() {
-  const linkStyle = "text-[#668b6d] no-underline text-lg h-full flex";
-
   return (
     <div className="bg-[#ffffff] shadow-md flex justify-between items-center py-2 px-4 gap-8 pl-10 pr-10">
       <div className="flex items-center">
