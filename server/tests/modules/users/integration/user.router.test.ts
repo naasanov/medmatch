@@ -5,14 +5,16 @@ import {
   SuccessBodyValidator,
   ValidationErrorBodyValidator,
 } from "#/utils/response.validator";
+import { IValidationError } from "@/types/errors";
 import {
   createTestUser,
   defaultUserData,
-  TestUserValidator,
-} from "#/modules/users/user.utils";
-import { IValidationError } from "@/types/errors";
+} from "#/modules/users/utils/user.helpers";
+import { TestUserValidator } from "#/modules/users/utils/user.validators";
 
 describe("User Router", () => {
+  beforeEach(async () => {});
+
   describe("GET /", () => {
     it("should return an empty list when there are no users", async () => {
       const response = await request(app).get("/api/users");
@@ -140,7 +142,7 @@ describe("User Router", () => {
         last: "",
         email: "",
         password: "",
-        isEmployer: true
+        isEmployer: true,
       };
 
       const response = await request(app).post("/api/users").send(invalidData);

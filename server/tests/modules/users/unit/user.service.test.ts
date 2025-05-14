@@ -5,15 +5,15 @@ import {
   UserNotFoundError,
   UserConflictError,
 } from "@/modules/users";
-import {
-  createTestFile,
-  createTestUser,
-  defaultUserData,
-  TestUserValidator,
-} from "#/modules/users/user.utils";
 import { expectMatch } from "#/utils/validation";
 import { ObjectId } from "mongodb";
 import { FileConflictError, FileNotFoundError } from "@/modules/files";
+import {
+  createTestUser,
+  defaultUserData,
+  createTestFile,
+} from "#/modules/users/utils/user.helpers";
+import { TestUserValidator } from "#/modules/users/utils/user.validators";
 
 describe("User Service", () => {
   let userService: UserService;
