@@ -47,3 +47,6 @@ node_modules/
 *.njsproj
 *.sln
 *.sw?
+
+# documentation
+docs/site/

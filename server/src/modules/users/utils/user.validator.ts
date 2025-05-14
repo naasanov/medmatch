@@ -1,15 +1,13 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
   IsString,
   IsNotEmpty,
   IsEmail,
   IsBoolean,
   IsDate,
-  IsArray,
-  IsMongoId,
   ValidateNested,
   IsOptional,
-  IsDefined,
+  IsISO8601,
 } from "class-validator";
 
 class ProfileValidator {
@@ -50,14 +48,17 @@ class UserValidator {
   @IsBoolean()
   isEmployer!: boolean;
 
-  @IsDate()
-  @IsNotEmpty()
-  entryDate!: Date;
+  @IsISO8601()
+  @IsOptional()
+  @Transform(({ value }) =>
+    value instanceof Date ? value.toISOString() : value
+  )
+  entryDate?: string;
 
-  @IsDefined()
+  @IsOptional()
   @ValidateNested()
   @Type(() => ProfileValidator)
-  profile!: ProfileValidator;
+  profile?: ProfileValidator;
 }
 
 export { UserValidator, ProfileValidator };

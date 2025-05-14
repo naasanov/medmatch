@@ -15,6 +15,9 @@ async function expectMatch<T extends object>(
       : obj;
   const instance = plainToInstance(classType, plainObj);
   const errors = await validate(instance);
+  if (errors.length > 0) {
+    console.error("Validation errors:", errors);
+  }
   expect(errors.length).toBe(0);
 }
 

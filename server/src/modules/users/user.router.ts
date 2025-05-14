@@ -15,12 +15,15 @@ import {
 } from "@/utils/validationMiddleware";
 import multer from "multer";
 import { body } from "express-validator";
+import { authenticate } from "@/utils/authentication";
 
 const userRouter = Router();
 const userService = new UserService(UserModel);
 const fileService = new FileService(FileModel);
 const userController = new UserController(userService, fileService);
 const upload = multer();
+
+userRouter.use(authenticate);
 
 userRouter.get("/", userController.getAllUsers);
 
@@ -70,8 +73,8 @@ userRouter.post(
 );
 
 userRouter.delete(
-  "/:id/files/:fileId",
-  validation(validateId("id"), validateId("fileId")),
+  "/:userId/files/:fileId",
+  validation(validateId("userId"), validateId("fileId")),
   userController.removeFile
 );
 

@@ -1,6 +1,4 @@
 # Medmatch
-## What Is Medmatch?
-Medmatch is a career oriented social media platform, similar to LinkedIn, designed for pre-med students. You can use it to find mentoring, volunteering, jobs, and other career building opportunities.
 ## Tech Stack
 * Frontend
   * Next.js
@@ -73,3 +71,27 @@ The backend follows a modular structure, keeping all structures related to a cer
 * utils
   * ***.errors.ts** - Defines custom errors thrown in the service, configured to be converted to an HTTP response.
   * ***.validator.ts** - Contains input validation logic and models for the given feature.
+
+## Documentation Website
+We will be using MkDocs for documentation. To run the documentation server, you need to do a few
+things.
+
+### Setup 
+1. Install MkDocs and required plugins:
+```bash
+pip install mkdocs mkdocs-material pymdown-extensions 
+```
+2. Run documentation server:
+```bash
+cd docs
+mkdocs serve
+```
+3. View the site on: http://127.0.0.1:8000/ 
+
+### Building static documentation
+To build the static site:
+```bash
+cd docs
+mkdocs build
+```
+The static site is built in the ```docs/site``` directory.

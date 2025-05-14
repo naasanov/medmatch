@@ -1,22 +1,31 @@
-import { Request, Response, RequestHandler, NextFunction } from "express";
-import { HttpError } from "@/types/errors";
-import { GeneralCode } from "@/types/errorCodes";
+import { Request, Response, NextFunction } from "express";
+import { GeneralCode, HttpError } from "@/types/errors";
 import dotenv from "dotenv";
 dotenv.config();
 
-const errorHandler = (err: any, req: Request, res: Response): any => {
+const errorHandler = (
+  error: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
   if (process.env.NODE_ENV === "development") {
-    console.error(err);
+    console.error(error);
   }
 
-  if (err instanceof HttpError) {
-    return res.status(err.status).json({
+  if (res === undefined) {
+    console.error("Response object is undefined in errorHandler");
+    return;
+  }
+
+  if (error instanceof HttpError) {
+    return res.status(error.status).json({
       status: "error",
       errors: [
         {
-          type: err.type,
-          details: err.message,
-          code: err.code,
+          type: error.type,
+          details: error.message,
+          code: error.code,
         },
       ],
     });
@@ -35,11 +44,12 @@ const errorHandler = (err: any, req: Request, res: Response): any => {
 };
 
 /**
- * Decorator that passes any caught error to the error handler.
+ * Decorator that should be attached to all controller methods.
+ * It passes any caught error to the error handler and binds the method to the class instance.
  * The error handler will convert any caught `HttpError` to a JSON response and log the error in development.
  * Any other error will be converted to a generic 500 error.
  */
-function HandleErrors() {
+function ControllerMethod() {
   return function (
     target: any,
     propertyKey: string,
@@ -52,19 +62,26 @@ function HandleErrors() {
     }
 
     descriptor.value = async function (
-      this: any,
       req: Request,
       res: Response,
       next: NextFunction
     ) {
       try {
-        await originalMethod.apply(this, [req, res, next]);
+        return await originalMethod.call(this, req, res, next);
       } catch (error) {
-        console.log(error)
         next(error);
       }
+    };
+
+    // Every time the method is called, it will be bound to the class instance
+    return {
+      configurable: true,
+      enumerable: false,
+      get() {
+        return descriptor.value!.bind(this);
+      },
     };
   };
 }
 
-export { errorHandler, HandleErrors };
+export { errorHandler, ControllerMethod };

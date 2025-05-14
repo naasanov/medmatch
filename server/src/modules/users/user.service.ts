@@ -1,44 +1,64 @@
-import { Model } from "mongoose";
 import {
   UserNotFoundError,
   UserConflictError,
   User,
-  Profile,
   UserDoc,
-  PopulatedProfile,
-  PopulatedUser,
+  UnpopulatedUserDoc,
+  UserModelType,
+  InputUser,
 } from "@/modules/users";
 import { MongoError, ObjectId } from "mongodb";
 import { FileConflictError, FileNotFoundError } from "@/modules/files";
+import { MongooseCode } from "@/types/errors";
+import bcrypt from "bcrypt";
 
 class UserService {
-  constructor(private users: Model<User>) {}
+  constructor(private userModel: UserModelType) {}
 
-  async getAllUsers(): Promise<PopulatedUser[]> {
-    return this.users
-      .find<PopulatedUser>()
-      .populate<{ profile: PopulatedProfile }>("profile.files")
+  async getAllUsers(): Promise<User[]> {
+    const docs = await this.userModel
+      .find<UserDoc>()
+      .populate("profile.files")
       .exec();
+    return docs.map((doc) => User.fromDoc(doc));
   }
 
-  async getUserById(userId: string): Promise<PopulatedUser> {
-    const user = await this.users
+  async getUserById(userId: string): Promise<User> {
+    const doc = await this.userModel
       .findById<UserDoc>(userId)
-      .populate<{ profile: PopulatedProfile }>("profile.files")
+      .populate("profile.files")
       .exec();
-    if (!user) {
+    if (!doc) {
       throw new UserNotFoundError(`User with id ${userId} not found`);
     }
-    return user;
+    return User.fromDoc(doc);
   }
 
-  async createUser(userData: User): Promise<PopulatedUser> {
+  async getUserByEmail(email: string): Promise<User> {
+    const doc = await this.userModel
+      .findOne<UserDoc>({ email })
+      .populate("profile.files")
+      .exec();
+      if (!doc) {
+        throw new UserNotFoundError(`User with email ${email} not found`);
+      }
+      return User.fromDoc(doc);
+  }
+
+  async createUser(userData: InputUser): Promise<User> {
     try {
-      const user = new this.users(userData);
+      const user = new this.userModel({
+        ...userData,
+        password: await bcrypt.hash(userData.password, 10),
+      });
       await user.save();
-      return user.populate<{ profile: PopulatedProfile }>("profile.files");
+      const populated: UserDoc = await user.populate("profile.files");
+      return User.fromDoc(populated);
     } catch (error) {
-      if (error instanceof MongoError && error.code === 11000) {
+      if (
+        error instanceof MongoError &&
+        error.code === MongooseCode.DuplicateKey
+      ) {
         throw new UserConflictError(
           `User with email ${userData.email} already exists`
         );
@@ -47,19 +67,19 @@ class UserService {
     }
   }
 
-  async updateUser(
-    userId: string,
-    userData: Partial<User>
-  ): Promise<PopulatedUser> {
+  async updateUser(userId: string, userData: Partial<InputUser>): Promise<User> {
     try {
-      const user = await this.users
+      if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 10);
+      }
+      const doc = await this.userModel
         .findByIdAndUpdate<UserDoc>(userId, userData, { new: true })
-        .populate<{ profile: PopulatedProfile }>("profile.files")
+        .populate("profile.files")
         .exec();
-      if (!user) {
+      if (!doc) {
         throw new UserNotFoundError(`User with id ${userId} not found`);
       }
-      return user;
+      return User.fromDoc(doc);
     } catch (error) {
       if (error instanceof MongoError && error.code === 11000) {
         throw new UserConflictError(
@@ -70,33 +90,42 @@ class UserService {
     }
   }
 
-  async deleteUser(userId: string): Promise<PopulatedUser> {
-    const user = await this.users
+  async deleteUser(userId: string): Promise<User> {
+    const doc = await this.userModel
       .findByIdAndDelete<UserDoc>(userId)
-      .populate<{ profile: PopulatedProfile }>("profile.files")
+      .populate("profile.files")
       .exec();
-    if (!user) {
+    if (!doc) {
       throw new UserNotFoundError(`User with id ${userId} not found`);
     }
-    return user;
+    return User.fromDoc(doc);
   }
 
-  async addFile(userId: string, fileId: string): Promise<PopulatedUser> {
-    const user = await this.users.findById<UserDoc>(userId).exec();
-    if (!user) {
+  async addFile(userId: string, fileId: string): Promise<User> {
+    const doc = await this.userModel
+      .findById<UnpopulatedUserDoc>(userId)
+      .exec();
+
+    if (!doc) {
       throw new UserNotFoundError(`User with id ${userId} not found`);
-    } else if (user.profile.files.includes(new ObjectId(fileId))) {
+    } else if (doc.profile.files.includes(new ObjectId(fileId))) {
       throw new FileConflictError(
         `File with id ${fileId} already exists for user with id ${userId}`
       );
     }
-    user.profile.files.push(new ObjectId(fileId));
-    await user.save();
-    return user.populate<{ profile: PopulatedProfile }>("profile.files");
+
+    doc.profile.files.push(new ObjectId(fileId));
+    await doc.save();
+
+    const populated: UserDoc = await doc.populate("profile.files");
+    return User.fromDoc(populated);
   }
 
-  async removeFile(userId: string, fileId: string): Promise<PopulatedUser> {
-    const user = await this.users.findById<UserDoc>(userId).exec();
+  async removeFile(userId: string, fileId: string): Promise<User> {
+    const user = await this.userModel
+      .findById<UnpopulatedUserDoc>(userId)
+      .exec();
+
     if (!user) {
       throw new UserNotFoundError(`User with id ${userId} not found`);
     } else if (!user.profile.files.includes(new ObjectId(fileId))) {
@@ -104,11 +133,14 @@ class UserService {
         `File with id ${fileId} not found for user with id ${userId}`
       );
     }
+
     user.profile.files = user.profile.files.filter(
       (file) => file.toHexString() !== fileId
     );
     await user.save();
-    return user.populate<{ profile: PopulatedProfile }>("profile.files");
+
+    const populated: UserDoc = await user.populate("profile.files");
+    return User.fromDoc(populated);
   }
 }
 

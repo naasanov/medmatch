@@ -4,7 +4,7 @@ import { FileService } from "@/modules/files";
 import {
   createMockUserService,
   createMockFileService,
-  createPopulatedTestUser,
+  createTestUser,
   defaultUserData,
 } from "#/modules/users/user.utils";
 import { createMockRequest, createMockResponse } from "#/utils/express.mocks";
@@ -31,10 +31,7 @@ describe("UserController", () => {
 
   describe("getAllUsers", () => {
     it("should return all users", async () => {
-      const mockUsers = [
-        await createPopulatedTestUser(),
-        await createPopulatedTestUser(),
-      ];
+      const mockUsers = [await createTestUser(), await createTestUser()];
       userService.getAllUsers.mockResolvedValue(mockUsers);
 
       await userController.getAllUsers(req, res);
@@ -51,20 +48,20 @@ describe("UserController", () => {
 
   describe("getUserById", () => {
     it("should return a user by id", async () => {
-      const mockUser = await createPopulatedTestUser();
+      const mockUser = await createTestUser();
       userService.getUserById.mockResolvedValue(mockUser);
-      req.params.id = mockUser._id.toString();
+      req.params.id = mockUser.id.toString();
 
       await userController.getUserById(req, res);
 
       expect(userService.getUserById).toHaveBeenCalledWith(
-        mockUser._id.toString()
+        mockUser.id.toString()
       );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: "success",
         data: mockUser,
-        message: `User with id ${mockUser._id} retrieved successfully`,
+        message: `User with id ${mockUser.id} retrieved successfully`,
       });
     });
   });
@@ -72,7 +69,7 @@ describe("UserController", () => {
   describe("createUser", () => {
     it("should create a new user", async () => {
       req.body = await defaultUserData();
-      const mockUser = { ...req.body, _id: new ObjectId() };
+      const mockUser = { ...req.body, id: new ObjectId() };
       userService.createUser.mockResolvedValue(mockUser);
 
       await userController.createUser(req, res);
@@ -82,15 +79,15 @@ describe("UserController", () => {
       expect(res.json).toHaveBeenCalledWith({
         status: "success",
         data: mockUser,
-        message: `User with id ${mockUser._id} created successfully`,
+        message: `User with id ${mockUser.id} created successfully`,
       });
     });
   });
 
   describe("updateUser", () => {
     it("should update an existing user", async () => {
-      const mockUser = await createPopulatedTestUser();
-      req.params.id = mockUser._id.toString();
+      const mockUser = await createTestUser();
+      req.params.id = mockUser.id.toString();
       req.body = { name: "Updated Name" };
       const updatedUser = { ...mockUser, name: "Updated Name" };
       userService.updateUser.mockResolvedValue(updatedUser);
@@ -98,48 +95,48 @@ describe("UserController", () => {
       await userController.updateUser(req, res);
 
       expect(userService.updateUser).toHaveBeenCalledWith(
-        mockUser._id.toString(),
+        mockUser.id.toString(),
         req.body
       );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: "success",
         data: updatedUser,
-        message: `User with id ${updatedUser._id} updated successfully`,
+        message: `User with id ${updatedUser.id} updated successfully`,
       });
     });
   });
 
   describe("deleteUser", () => {
     it("should delete a user by id", async () => {
-      const mockUser = await createPopulatedTestUser();
-      req.params.id = mockUser._id.toString();
+      const mockUser = await createTestUser();
+      req.params.id = mockUser.id.toString();
       userService.deleteUser.mockResolvedValue(mockUser);
 
       await userController.deleteUser(req, res);
 
       expect(userService.deleteUser).toHaveBeenCalledWith(
-        mockUser._id.toString()
+        mockUser.id.toString()
       );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: "success",
         data: mockUser,
-        message: `User with id ${mockUser._id} deleted successfully`,
+        message: `User with id ${mockUser.id} deleted successfully`,
       });
     });
   });
 
   describe("addFile", () => {
     it("should add a file to a user", async () => {
-      const mockUser = await createPopulatedTestUser();
+      const mockUser = await createTestUser();
       const mockFile = {
-        _id: new ObjectId(),
+        id: new ObjectId().toString(),
         name: "test-file.jpg",
         type: "image/jpeg" as const,
         data: Buffer.from("test"),
       };
-      req.params.id = mockUser._id.toString();
+      req.params.id = mockUser.id.toString();
       req.file = {
         originalname: mockFile.name,
         mimetype: mockFile.type,
@@ -158,35 +155,35 @@ describe("UserController", () => {
         data: req.file.buffer,
       });
       expect(userService.addFile).toHaveBeenCalledWith(
-        mockUser._id.toString(),
-        mockFile._id.toString()
+        mockUser.id.toString(),
+        mockFile.id.toString()
       );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         status: "success",
         data: mockReturn,
-        message: `File ${mockFile.name} with id ${mockFile._id} successfully added to user with id ${mockUser._id}`,
+        message: `File ${mockFile.name} with id ${mockFile.id} successfully added to user with id ${mockUser.id}`,
       });
     });
   });
 
   describe("removeFile", () => {
     it("should remove a file from a user", async () => {
-      const mockUser = await createPopulatedTestUser();
+      const mockUser = await createTestUser();
       const mockFile = mockUser.profile.files[0];
-      req.params.userId = mockUser._id.toString();
-      req.params.fileId = mockFile._id.toString();
+      req.params.userId = mockUser.id.toString();
+      req.params.fileId = mockFile.id.toString();
       userService.removeFile.mockResolvedValue(mockUser);
       fileService.deleteFile.mockResolvedValue(mockFile);
 
       await userController.removeFile(req, res);
 
       expect(userService.removeFile).toHaveBeenCalledWith(
-        mockUser._id.toString(),
-        mockFile._id.toString()
+        mockUser.id.toString(),
+        mockFile.id.toString()
       );
       expect(fileService.deleteFile).toHaveBeenCalledWith(
-        mockFile._id.toString()
+        mockFile.id.toString()
       );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
