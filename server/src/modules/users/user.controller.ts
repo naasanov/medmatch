@@ -1,5 +1,5 @@
-import { UserService, User } from "@/modules/users";
-import { HandleErrors } from "@/utils/errorHandler";
+import { UserService, InputUser } from "@/modules/users";
+import { ControllerMethod } from "@/utils/errorHandler";
 import { Request, Response } from "express";
 import { FileService, File } from "@/modules/files";
 
@@ -17,7 +17,7 @@ class UserController {
     this.removeFile = this.removeFile.bind(this);
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async getAllUsers(req: Request, res: Response): Promise<void> {
     const users = await this.userService.getAllUsers();
     res.status(200).json({
@@ -27,29 +27,29 @@ class UserController {
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async getUserById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const user = await this.userService.getUserById(id);
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} retrieved successfully`,
+      message: `User with id ${user.id} retrieved successfully`,
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async createUser(req: Request, res: Response): Promise<void> {
-    const userData: User = req.body;
+    const userData: InputUser = req.body;
     const user = await this.userService.createUser(userData);
     res.status(201).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} created successfully`,
+      message: `User with id ${user.id} created successfully`,
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async updateUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const userData = req.body;
@@ -57,22 +57,22 @@ class UserController {
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} updated successfully`,
+      message: `User with id ${user.id} updated successfully`,
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async deleteUser(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const user = await this.userService.deleteUser(id);
     res.status(200).json({
       status: "success",
       data: user,
-      message: `User with id ${user._id} deleted successfully`,
+      message: `User with id ${user.id} deleted successfully`,
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async addFile(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const fileData = req.file!;
@@ -81,15 +81,15 @@ class UserController {
       type: fileData.mimetype,
       data: fileData.buffer,
     } as File);
-    const user = await this.userService.addFile(id, file._id.toString());
+    const user = await this.userService.addFile(id, file.id);
     res.status(200).json({
       status: "success",
       data: user,
-      message: `File ${file.name} with id ${file._id} successfully added to user with id ${user._id}`,
+      message: `File ${file.name} with id ${file.id} successfully added to user with id ${user.id}`,
     });
   }
 
-  @HandleErrors()
+  @ControllerMethod()
   async removeFile(req: Request, res: Response): Promise<void> {
     const { userId, fileId } = req.params;
     await this.fileService.deleteFile(fileId);

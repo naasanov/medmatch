@@ -20,7 +20,7 @@ node_modules/
 /client/build
 
 # misc
-/client/.DS_Store
+**/.DS_Store
 /client/*.pem
 
 # debug
@@ -47,3 +47,6 @@ node_modules/
 *.njsproj
 *.sln
 *.sw?
+
+# documentation
+docs/site/

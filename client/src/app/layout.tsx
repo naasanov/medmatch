@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Nunito_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
@@ -8,6 +8,12 @@ const nunito_sans = Nunito_Sans({
   weight: ["300", "400", "600", "700"],
   variable: "--font-nunito-sans",
 });
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Medmatch",
@@ -21,9 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunito_sans.variable} antialiased`}>
+      <body className={`${inter.variable} ${nunito_sans.variable} antialiased`}>
         <Navbar />
-        <div className="mx-4 md:mx-8 lg:mx-16 xl:mx-24">{children}</div>
+        <div>{children}</div>
       </body>
     </html>
   );

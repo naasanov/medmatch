@@ -2,17 +2,20 @@ import "reflect-metadata";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
 import { fileRouter } from "@/modules/files";
 import { userRouter } from "@/modules/users";
 import { errorHandler } from "@/utils/errorHandler";
+import { authRouter } from "@/modules/auth";
 
 // Express configuration
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 const corsOptions = {
   origin: "*",
@@ -45,6 +48,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Connected");
 });
 
+app.use("/api/auth", authRouter);
 app.use("/api/files", fileRouter);
 app.use("/api/users", userRouter);
 

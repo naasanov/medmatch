@@ -11,7 +11,9 @@ import {
 } from "express-validator";
 import { ValidationError as ClassValidationError } from "class-validator";
 import { IValidationError } from "@/types/errors";
-import { ClassType } from "@/types/validation";
+
+/** Represents a constructor for a class */
+type ClassType<T> = { new (...args: any[]): T };
 
 /**
  * Returns a request handler that validates the request body against a class defined with `class-validator`.
@@ -125,7 +127,6 @@ function formatClassErrors(
 function endValidation(req: Request, res: Response, next: NextFunction): any {
   const expressValidatorErrors = formattedValidationResult(req).array();
   const classValidatorErrors = formatClassErrors(res.locals.classValidatorErrors ?? [])
-  console.log("class errors: ", res.locals.classValidatorErrors)
   const errors = [...expressValidatorErrors, ...classValidatorErrors];
   if (errors.length > 0) {
     return res.status(400).json({

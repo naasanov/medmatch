@@ -4,6 +4,7 @@
 
 :root {
   --font-nunito-sans: var(--font-nunito-sans), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -14,7 +15,7 @@
 } */
 
 body {
-  font-family: var(--font-nunito-sans), Helvetica, sans-serif;
+  font-family: var(--font-inter), Helvetica, sans-serif;
 }
 
 * {
@@ -25,22 +26,22 @@ body {
 
 @layer base {
   :root {
-    /* --background: 0 0% 100%; */
-    --background: oklch(94.61% 0 0);
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: oklch(94.61% 0 0);
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    /* --background: 240, 100%, 98% */
+    --background: var(--background-white); 
+    --foreground: var(--body-text); 
+    --card: var(--background-white); 
+    --card-foreground: var(--body-text); 
+    --popover: var(--background-white); 
+    --popover-foreground: var(--body-text); 
+    --primary: var(--primary-purple); 
+    --primary-foreground: var(--background-white);
+    --secondary: var(--primary-blue); 
+    --secondary-foreground: var(--background-white);
+    --muted: 210 40% 96.1%; /*no equivalent*/
+    --muted-foreground: 215.4 16.3% 46.9%; /*no equivalent*/
+    --accent: var(--secondary-blue); 
+    --accent-foreground: var(--background-white);
+    --destructive: 0 84.2% 60.2%; /*no equivalent here until custom colors*/
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -51,6 +52,30 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /*custom color variables*/
+    --primary-purple: 249, 95%, 67%;
+    --primary-blue: 223, 89%, 40%;
+    --secondary-blue: 211, 80%, 54%;
+    --background-white: 240, 100%, 98%;
+    --primary-purple-g1: 250, 94%, 73%;
+    --primary-purple-g2: 249, 94%, 80%;
+    --primary-purple-g3: 250, 92%, 90%;
+    --primary-blue-g1: 223, 59%, 52%;
+    --primary-blue-g2: 223, 59%, 64%;
+    --primary-blue-g3: 223, 59%, 76%;
+    --secondary-blue-g1: 211, 79%, 63%;
+    --secondary-blue-g2: 211, 79%, 72%;
+    --secondary-blue-g3: 212, 79%, 81%;
+    --title-pb: 223, 89%, 40%;
+    --basic-title: 227, 42%, 17%;
+    --body-text: 226, 13%, 44%;
+    --shadows-outlines: 240, 12%, 88%;
+    --title-pb-hover: 223, 90%, 24%;
+    --basic-title-hover: 229, 41%, 10%;
+    --body-text-hover: 226, 13%, 31%;
+    --shadows-outlines-hover: 240, 4%, 71%;
+    --primary-purple-hover: 250, 48%, 46%;
   }
   .dark {
     --background: 222.2 84% 4.9%;

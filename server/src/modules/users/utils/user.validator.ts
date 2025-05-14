@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsEmail,
   IsBoolean,
+  IsDate,
   ValidateNested,
   IsOptional,
   IsISO8601,
