@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${nunito_sans.variable} antialiased`}>
         <Navbar />
-        <div className="mx-4 md:mx-8 lg:mx-16 xl:mx-24">{children}</div>
+        <div>{children}</div>
       </body>
     </html>
   );
